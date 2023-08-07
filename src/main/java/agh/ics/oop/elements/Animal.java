@@ -69,17 +69,35 @@ public class Animal implements IElement {
         }
 
         this.orientation = this.orientation.rotate(this.genes[this.genesIndex]);
+        Vector2d oldPosition = this.position;
         this.position = this.position.add(this.orientation.unitVector());
+        map.verify(this.position, this);
+        map.changePosition(oldPosition, this.position, this);
     }
 
-    public void eat(int energy) {
-        this.energy += energy;
+    public void eat(int amount) {
+        this.energy += amount;
         if (this.energy > this.maxEnergy) {this.energy = this.maxEnergy;}
         this.counterPlantsEaten++;
+
     }
 
-
-
+    public Animal compare(Animal other) {
+        if (this.energy > other.energy) {return this;}
+        else if (this.energy < other.energy) {return other;}
+        else {
+            if (this.age > other.age) {return this;}
+            else if (this.age < other.age) {return other;}
+            else {
+                if (this.counterChildren > other.counterChildren) {return this;}
+                else if (this.counterChildren < other.counterChildren) {return other;}
+                else {
+                    if (random.nextBoolean()) {return this;}
+                    else {return other;}
+                }
+            }
+        }
+    }
 
 
 
