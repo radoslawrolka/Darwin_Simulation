@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Genotype {
-    public int[] createGenotype(Animal parent1, Animal parent2, MutationStyle mutationStyle, int numberOfMutations) {
+    public int[] createGenotype(Animal parent1, Animal parent2, MutationStyle mutationStyle, int minMutations, int maxMutations) {
         int[] genes1 = parent1.getGenes();
         int[] genes2 = parent2.getGenes();
         int[] result = new int[genes1.length];
@@ -12,7 +12,7 @@ public class Genotype {
         int energy2 = parent2.getEnergy();
 
         Random random = new Random();
-        int ratio = (energy1 / (energy1 + energy2))*genes2.length;
+        int ratio = (int) (((double) energy1 / (double)(energy1 + energy2))*genes2.length);
 
         //True == left, False == right
         if (random.nextBoolean()) {
@@ -27,6 +27,7 @@ public class Genotype {
         ArrayList<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < result.length; i++) {indexes.add(i);}
 
+        int numberOfMutations = random.nextInt(maxMutations - minMutations) + minMutations;
         if (mutationStyle == MutationStyle.FULLY_RANDOM) {
             for (int counter = 0; counter < numberOfMutations; counter++) {
                 int i = indexes.remove(random.nextInt(indexes.size()));
@@ -44,6 +45,13 @@ public class Genotype {
         return result;
     }
 
-
+    public int[] spawnGenes(int genesLength) {
+        Random random = new Random();
+        int[] result = new int[genesLength];
+        for (int i = 0; i < genesLength; i++) {
+            result[i] = random.nextInt(8);
+        }
+        return result;
+    }
 
 }

@@ -17,13 +17,6 @@ public class ToxicCorpses implements IMapGrounds{
     }
 
     @Override
-    public Vector2d choosePosition() {
-        int x = random.nextInt(mapWidth) +1;
-        int y = random.nextInt(mapHeight) +1;
-        return new Vector2d(x, y);
-    }
-
-    @Override
     public boolean isPreferable(Vector2d position) {
         return cementary.isEmpty(position);
     }
