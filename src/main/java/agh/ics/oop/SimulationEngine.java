@@ -14,6 +14,7 @@ public class SimulationEngine implements Runnable{
     private List<Animal> animals = new ArrayList<>();
     private final int dayCost;
     private int day = 0;
+    private boolean paused = false;
 
     public SimulationEngine(App app, World map, int moveDelay, int dayCost) {
         this.app = app;
@@ -31,13 +32,13 @@ public class SimulationEngine implements Runnable{
             map.eatPlants();
             map.addDay();
             this.day++;
-            System.out.println(" Animals: " + animals.size() );
+            //System.out.println(" Animals: " + animals.size() );
             map.reproduce();
-            System.out.println(" Animals: " + animals.size() );
+            //System.out.println(" Animals: " + animals.size() );
             map.growPlants();
             addDay();
             map.draw();
-
+            app.refreshMap();
             try {
                 Thread.sleep(MoveDelay);
             }
@@ -77,4 +78,5 @@ public class SimulationEngine implements Runnable{
             animal.removeEnergy(dayCost);
         }
     }
+    
 }
