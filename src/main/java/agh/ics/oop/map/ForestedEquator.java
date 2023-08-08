@@ -12,8 +12,8 @@ public class ForestedEquator implements IMapGrounds {
     private final int mapHeight;
 
     public ForestedEquator(int equatorWidth, int equatorHeight, int mapWidth, int mapHeight) {
-        this.equatorLowerLeft = new Vector2d((mapWidth-equatorWidth)/2, (mapHeight-equatorHeight)/2);
-        this.equatorUpperRight = new Vector2d((equatorLowerLeft.getX()+equatorWidth), (equatorLowerLeft.getY()+equatorHeight));
+        this.equatorLowerLeft = new Vector2d((mapWidth-equatorWidth)/2+1, (mapHeight-equatorHeight)/2+1);
+        this.equatorUpperRight = new Vector2d((equatorLowerLeft.getX()+equatorWidth-1), (equatorLowerLeft.getY()+equatorHeight-1));
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
     }
@@ -31,6 +31,16 @@ public class ForestedEquator implements IMapGrounds {
         }
         else {
             return random.nextInt(5) == 4;
+        }
+    }
+
+    @Override
+    public String groundType(Vector2d position) {
+        if (isPreferable(position)) {
+            return "equator";
+        }
+        else {
+            return "grass";
         }
     }
 }

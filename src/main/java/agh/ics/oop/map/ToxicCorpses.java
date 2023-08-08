@@ -8,17 +8,17 @@ public class ToxicCorpses implements IMapGrounds{
     private final Random random = new Random();
     private final int mapWidth;
     private final int mapHeight;
-    private final Cementary cementary;
+    private final World map;
 
-    public ToxicCorpses(int mapWidth, int mapHeight, Cementary cementary) {
+    public ToxicCorpses(int mapWidth, int mapHeight, World map) {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.cementary = cementary;
+        this.map = map;
     }
 
     @Override
     public boolean isPreferable(Vector2d position) {
-        return cementary.isEmpty(position);
+        return !map.isDeadHere(position);
     }
 
     @Override
@@ -30,4 +30,15 @@ public class ToxicCorpses implements IMapGrounds{
             return random.nextInt(5) == 4;
         }
     }
+
+    @Override
+    public String groundType(Vector2d position) {
+        if (map.isDeadHere(position)) {
+            return "toxic";
+        }
+        else {
+            return "grass";
+        }
+    }
+
 }

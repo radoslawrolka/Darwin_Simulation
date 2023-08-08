@@ -69,26 +69,17 @@ public class App extends Application{
             for (int j = mapHeight; j >= 1; j--) {
                 Vector2d pos = new Vector2d(i,j);
 
-                //gridPane.add( new Label(map.isAt(pos)),i,mapHeight-j+1);
-                //GridPane.setHalignment(new Label(map.isAt(pos)),HPos.CENTER);
+                //Label label = new Label(map.isAt(pos));
+                //GridPane.setHalignment(label, HPos.CENTER);
+                //gridPane.add(label, i, mapHeight-j+1);
 
-                Label label = new Label(map.isAt(pos));
-                GridPane.setHalignment(label, HPos.CENTER);
-                gridPane.getColumnConstraints().add(new ColumnConstraints(width));
-                gridPane.add(label, i, mapHeight-j+1);
+                String element = map.isAt(pos);
+                String background = map.groundType(pos);
 
-                /*
+                GuiElementBox elementBox = new GuiElementBox(element, background);
+                gridPane.add(elementBox.getvBox(),i,mapHeight-j+1);
+                GridPane.setHalignment(elementBox.getvBox(),HPos.CENTER);
 
-                if(map.isOccupied(pos)){
-                    //GuiElementBox elementBox = new GuiElementBox(map.objectAt(pos));
-                    gridPane.add(elementBox.getvBox(),i,mapHeight-j+1);
-                    GridPane.setHalignment(elementBox.getvBox(),HPos.CENTER);
-                }
-                else {
-                    gridPane.add(new Label(" "),i,mapHeight-j+1);
-                }
-
-                */
 
             }
         }
@@ -156,9 +147,11 @@ public class App extends Application{
         });
 
         prepareScene();
-        VBox mapAndButtons = new VBox(hbox, hbox2, hbox3, hbox4, gridPane);
+        VBox map = new VBox(gridPane);
+        VBox buttons = new VBox(hbox, hbox2, hbox3, hbox4);
+        HBox mapAndButtons = new HBox(buttons, map);
 
-        Scene scene = new Scene(mapAndButtons,600,600);
+        Scene scene = new Scene(mapAndButtons,1000,800);
         gameStage.setScene(scene);
         gameStage.show();
     }

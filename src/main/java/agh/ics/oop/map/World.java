@@ -32,6 +32,7 @@ public class World {
     private Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private Map<Vector2d, Plant> plants = new HashMap<>();
     private List<Vector2d> freePositions = new ArrayList<>();
+    private Map<Vector2d, Integer> cementary = new HashMap<>();
 
     public World(int width, int height, IMapBorder mapBorder, IMapGrounds mapGrounds, int plantsEnergy, int startingPlants, int spawnPlantsDay, int animalStartEnergy, int animalReproductionEnergy, int startingAnimals, int minimumMutations, int maximumMutations, int genesLength, int animalMaxEnergy, MovingStyle movingStyle, MutationStyle mutationStyle) {
         this.width = width;
@@ -98,6 +99,12 @@ public class World {
         animals.get(position).remove(animal);
         if (animals.get(position).size() == 0) {
             animals.remove(position);
+        }
+        if (cementary.containsKey(position)) {
+            cementary.put(position, cementary.get(position) + 1);
+        }
+        else {
+            cementary.put(position, 1);
         }
     }
 
@@ -188,6 +195,26 @@ public class World {
     public void addDay() {
         day++;
         System.out.println("Day: "+ day);
+    }
+
+    public String isAt(Vector2d position) {
+        if (animals.containsKey(position)) {
+            return String.valueOf(animals.get(position).size());
+        }
+        else if (plants.containsKey(position)) {
+            return "plant";
+        }
+        else {
+            return " ";
+        }
+    }
+
+    public String groundType(Vector2d position) {
+        return mapGrounds.groundType(position);
+    }
+
+    public boolean isDeadHere(Vector2d position) {
+        return cementary.containsKey(position);
     }
 
     public void draw() {
