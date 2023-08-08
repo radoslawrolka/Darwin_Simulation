@@ -17,7 +17,7 @@ public class GuiElementBox {
 
     public GuiElementBox(String element, String background) {
         //System.out.println(element);
-        System.out.println(background);
+        //System.out.println(background);
         if (element.equals("plant")) {
             this.image = new Image("/" + element + ".png");
             this.imageView = new ImageView(image);

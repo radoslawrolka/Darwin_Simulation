@@ -34,6 +34,9 @@ public class World {
     private List<Vector2d> freePositions = new ArrayList<>();
     private Map<Vector2d, Integer> cementary = new HashMap<>();
 
+    private int deadNum = 0;
+    private int deadSumLife = 0;
+
     public World(int width, int height, IMapBorder mapBorder, IMapGrounds mapGrounds, int plantsEnergy, int startingPlants, int spawnPlantsDay, int animalStartEnergy, int animalReproductionEnergy, int startingAnimals, int minimumMutations, int maximumMutations, int genesLength, int animalMaxEnergy, MovingStyle movingStyle, MutationStyle mutationStyle) {
         this.width = width;
         this.height = height;
@@ -96,6 +99,8 @@ public class World {
 
     public void removeAnimal(Animal animal) {
         Vector2d position = animal.getPosition();
+        deadNum++;
+        deadSumLife += animal.getAge();
         animals.get(position).remove(animal);
         if (animals.get(position).size() == 0) {
             animals.remove(position);
@@ -215,6 +220,13 @@ public class World {
 
     public boolean isDeadHere(Vector2d position) {
         return cementary.containsKey(position);
+    }
+
+    public int getPlantsNum() {
+        return plants.keySet().size();
+    }
+    public double getAvgDeath() {
+        return (double)deadSumLife/(double)deadNum;
     }
 
     public void draw() {

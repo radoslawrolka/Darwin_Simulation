@@ -78,5 +78,29 @@ public class SimulationEngine implements Runnable{
             animal.removeEnergy(dayCost);
         }
     }
-    
+
+    public int getDay() {
+        return day;
+    }
+
+    public int getAnimalsNum() {
+        return animals.size();
+    }
+
+    public double getAvgEnergy() {
+        int sum = 0;
+        for (Animal animal: animals) {
+            sum += animal.getEnergy();
+        }
+        //System.out.println("Average energy: " + sum/animals.size());
+        return (double)sum/animals.size();
+    }
+
+    public double getAvgLife() {
+        int sum = 0;
+        for (Animal animal: animals) {
+            sum += animal.getAge();
+        }
+        return ((double)sum/animals.size());
+    }
 }

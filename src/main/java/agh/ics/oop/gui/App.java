@@ -27,13 +27,14 @@ public class App extends Application{
     int width = 50;
     private Thread thread;
     private boolean start = true;
+    private VBox stats = new VBox();
 
     public void init() {
         this.mapHeight = 10;
         this.mapWidth = 10;
         this.borders = new Globe(mapWidth,mapHeight);
         this.grounds = new ForestedEquator(4,4,mapWidth,mapHeight);
-        this.map = new World(mapWidth, mapHeight, borders, grounds, 1, 10, 3, 10, 5, 8, 1, 3, 4, 1000, MovingStyle.FULLY_PREDESTINED, MutationStyle.FULLY_RANDOM);
+        this.map = new World(mapWidth, mapHeight, borders, grounds, 1, 8, 3, 50, 5, 8, 1, 3, 4, 1000, MovingStyle.FULLY_PREDESTINED, MutationStyle.FULLY_RANDOM);
         this.engine = new SimulationEngine(this, map, 1000, 1);
         this.map.addEngine(engine);
         this.thread = new Thread(this.engine);
@@ -85,11 +86,25 @@ public class App extends Application{
         }
     }
 
+    public void updateStatistics() {
+        stats.getChildren().clear();
+        Label day = new Label("Day: " + engine.getDay());
+        Label animals = new Label("Animals: " + engine.getAnimalsNum());
+        Label plants = new Label("Plants: " + map.getPlantsNum());
+        Label avgEnergy = new Label("Average energy: " + engine.getAvgEnergy());
+        Label avgLife = new Label("Average life: " + engine.getAvgLife());
+        Label avgDeath = new Label("Average death: " + map.getAvgDeath());
+
+        stats.getChildren().addAll(day, animals, plants, avgEnergy, avgLife, avgDeath);
+        stats.setAlignment(javafx.geometry.Pos.CENTER);
+    }
+
     public void prepareScene(){
         xyLabel();
         columnsFunction();
         rowsFunction();
         addElements();
+        updateStatistics();
         gridPane.setGridLinesVisible(true);
     }
 
@@ -100,6 +115,7 @@ public class App extends Application{
             gridPane.getColumnConstraints().clear();
             gridPane.getRowConstraints().clear();
             prepareScene();
+
         });
     }
 
@@ -148,8 +164,8 @@ public class App extends Application{
 
         prepareScene();
         VBox map = new VBox(gridPane);
-        VBox buttons = new VBox(hbox, hbox2, hbox3, hbox4);
-        HBox mapAndButtons = new HBox(buttons, map);
+        VBox buttonsAndStats = new VBox(hbox, hbox2, hbox3, hbox4, stats);
+        HBox mapAndButtons = new HBox(buttonsAndStats, map);
 
         Scene scene = new Scene(mapAndButtons,1000,800);
         gameStage.setScene(scene);
