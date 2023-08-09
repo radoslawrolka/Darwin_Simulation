@@ -33,6 +33,7 @@ public class World {
     private Map<Vector2d, Plant> plants = new HashMap<>();
     private List<Vector2d> freePositions = new ArrayList<>();
     private Map<Vector2d, Integer> cementary = new HashMap<>();
+    private Map<String, Integer> genomes = new HashMap<>();
 
     private int deadNum = 0;
     private int deadSumLife = 0;
@@ -98,6 +99,12 @@ public class World {
             list.add(animal);
             animals.put(position, list);
         }
+        if (genomes.containsKey(Arrays.toString(animal.getGenes()))) {
+            genomes.put(Arrays.toString(animal.getGenes()), genomes.get(Arrays.toString(animal.getGenes())) + 1);
+        }
+        else {
+            genomes.put(Arrays.toString(animal.getGenes()), 1);
+        }
     }
 
     public void removeAnimal(Animal animal) {
@@ -105,6 +112,7 @@ public class World {
         deadNum++;
         deadSumLife += animal.getAge();
         animals.get(position).remove(animal);
+        genomes.put(Arrays.toString(animal.getGenes()), genomes.get(Arrays.toString(animal.getGenes())) - 1);
         if (animals.get(position).size() == 0) {
             animals.remove(position);
         }
@@ -182,6 +190,12 @@ public class World {
                         list2.add(kid);
                         animals.put(position, list2);
                     }
+                    if (genomes.containsKey(Arrays.toString(kid.getGenes()))) {
+                        genomes.put(Arrays.toString(kid.getGenes()), genomes.get(Arrays.toString(kid.getGenes())) + 1);
+                    }
+                    else {
+                        genomes.put(Arrays.toString(kid.getGenes()), 1);
+                    }
                     engine.addAnimal(kid);
                 }
             }
@@ -202,7 +216,6 @@ public class World {
 
     public void addDay() {
         day++;
-        System.out.println("Day: "+ day);
     }
 
     public String isAt(Vector2d position) {
@@ -228,8 +241,20 @@ public class World {
     public int getPlantsNum() {
         return plants.keySet().size();
     }
-    public double getAvgDeath() {
-        return (double)deadSumLife/(double)deadNum;
+    public int getAvgDeath() {
+        return (int) ((double)deadSumLife/(double)deadNum);
+    }
+
+    public String getTopGenom() {
+        String top = "None";
+        int num=-1;
+        for (String gen :genomes.keySet()) {
+            if (genomes.get(gen) > num) {
+                top = gen;
+                num = genomes.get(gen);
+            }
+        }
+        return top;
     }
 
     public void draw() {

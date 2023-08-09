@@ -15,6 +15,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class App extends Application{
     private World map;
     private IMapBorder borders;
@@ -23,11 +27,11 @@ public class App extends Application{
     private int mapHeight = 6;
     private int mapWidth = 6;
     private GridPane gridPane = new GridPane();
-    int height = 50;
-    int width = 50;
+    private int height;
+    private int width;
     private Thread thread;
     private boolean start = true;
-    private VBox stats = new VBox();
+    //private VBox stats = new VBox();
     private int penalty;
     private String border = "Globe";
     private String ground = "Equator";
@@ -48,6 +52,7 @@ public class App extends Application{
     private int moveDelay= 1000;
     private int dayCost=1;
     private boolean smooth = true;
+    private GridPane stats = new GridPane();
 
     public void xyLabel(){
         GridPane.setHalignment(new Label("y/x"), HPos.CENTER);
@@ -74,6 +79,8 @@ public class App extends Application{
         }
     }
 
+
+
     public void addElements() {
         for (int i = 1; i <= mapWidth; i++) {
             for (int j = mapHeight; j >= 1; j--) {
@@ -91,6 +98,7 @@ public class App extends Application{
                     GuiElementBox elementBox = new GuiElementBox(element, background);
                     gridPane.add(elementBox.getvBox(),i,mapHeight-j+1);
                     GridPane.setHalignment(elementBox.getvBox(),HPos.CENTER);
+
                 }
             }
         }
@@ -99,14 +107,35 @@ public class App extends Application{
     public void updateStatistics() {
         stats.getChildren().clear();
         Label day = new Label("Day: " + engine.getDay());
+        stats.add(day, 0, 0);
+        GridPane.setHalignment(day, HPos.CENTER);
         Label animals = new Label("Animals: " + engine.getAnimalsNum());
+        stats.add(animals, 0, 1);
+        GridPane.setHalignment(animals, HPos.CENTER);
         Label plants = new Label("Plants: " + map.getPlantsNum());
+        stats.add(plants, 0, 2);
+        GridPane.setHalignment(plants, HPos.CENTER);
         Label avgEnergy = new Label("Average energy: " + engine.getAvgEnergy());
+        stats.add(avgEnergy, 0, 3);
+        GridPane.setHalignment(avgEnergy, HPos.CENTER);
         Label avgLife = new Label("Average life: " + engine.getAvgLife());
+        stats.add(avgLife, 0, 4);
+        GridPane.setHalignment(avgLife, HPos.CENTER);
         Label avgDeath = new Label("Average death: " + map.getAvgDeath());
+        stats.add(avgDeath, 0, 5);
+        GridPane.setHalignment(avgDeath, HPos.CENTER);
+        Label topGenes = new Label("Top genes: " + map.getTopGenom());
+        stats.add(topGenes, 0, 6);
+        GridPane.setHalignment(topGenes, HPos.CENTER);
 
-        stats.getChildren().addAll(day, animals, plants, avgEnergy, avgLife, avgDeath);
+        //stats.getChildren().addAll(day, animals, plants, avgEnergy, avgLife, avgDeath, topGenes);
         stats.setAlignment(javafx.geometry.Pos.CENTER);
+    }
+
+    public void makeStat() {
+        for (int i=0; i<7; i++) {
+            stats.getRowConstraints().add(new RowConstraints(30));
+        }
     }
 
     public void prepareScene(){
@@ -114,6 +143,7 @@ public class App extends Application{
         columnsFunction();
         rowsFunction();
         addElements();
+        makeStat();
         updateStatistics();
         gridPane.setGridLinesVisible(true);
     }
@@ -231,40 +261,94 @@ public class App extends Application{
             }
         });
 
+        Label label18 = new Label("Read from file: ");
+        TextField file = new TextField();
+        HBox fileBox = new HBox(label18, file);
+
         Button play = new Button("Play");
         play.setOnAction(event -> {
-            this.mapHeight = Integer.parseInt(height.getText());
-            this.mapWidth = Integer.parseInt(width.getText());
-
-            if (this.border.equals("Hell")) {
-                this.penalty = Integer.parseInt(penalty.getText());
-                this.borders = new HellPortal(this.mapWidth, this.mapHeight, this.penalty);
+            String path = file.getText();
+            if (path.length() > 0) {
+                Scanner sc = null;
+                try {
+                    sc = new Scanner(new File("C:/Users/acer/Desktop/java/Evolution_Game/src/main/resources/" + path + ".csv"));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                sc.useDelimiter(";");
+                this.mapWidth = sc.nextInt();
+                this.mapHeight = sc.nextInt();
+                this.height = 800 / (this.mapHeight + 1);
+                this.width = 800 / (this.mapWidth + 1);
+                if (sc.next().equals("Globe")) {
+                    this.borders = new Globe(this.mapWidth, this.mapHeight);
+                } else {
+                    this.penalty = sc.nextInt();
+                    this.borders = new HellPortal(this.mapWidth, this.mapHeight, this.penalty);
+                }
+                if (sc.next().equals("Equator")) {
+                    this.equatorWidth = sc.nextInt();
+                    this.equatorHeigth = sc.nextInt();
+                    this.grounds = new ForestedEquator(this.equatorWidth, this.equatorHeigth, this.mapWidth, this.mapHeight);
+                } else {
+                    this.grounds = new ToxicCorpses(this.mapWidth, this.mapHeight);
+                }
+                this.plantsEnergy = sc.nextInt();
+                this.startingPlants = sc.nextInt();
+                this.plantsGrowth = sc.nextInt();
+                this.animalsStartingEnergy = sc.nextInt();
+                this.animalsReproductionEnergy = sc.nextInt();
+                this.animalsStartNum = sc.nextInt();
+                this.animalMaxEnergy = sc.nextInt();
+                this.Geneslen = sc.nextInt();
+                this.maxMutations = sc.nextInt();
+                this.minMutations = sc.nextInt();
+                this.moveDelay = sc.nextInt();
+                this.dayCost = sc.nextInt();
+                if (sc.next().equals("FP")) {this.movingStyle = MovingStyle.FULLY_PREDESTINED;}
+                else {this.movingStyle = MovingStyle.BIT_OF_RANDOMNESS;}
+                if (sc.next().equals("FR")) {this.mutationStyle = MutationStyle.FULLY_RANDOM;}
+                else {this.mutationStyle = MutationStyle.LITTLE_CORRECTION;}
+                sc.close();
             }
-            else {this.borders = new Globe(this.mapWidth, this.mapHeight);}
+            else {
+                this.mapHeight = Integer.parseInt(height.getText());
+                this.mapWidth = Integer.parseInt(width.getText());
 
-            if (this.ground.equals("Equator")) {
-                this.equatorWidth = Integer.parseInt(equatorWidth.getText());
-                this.equatorHeigth = Integer.parseInt(equatorHeight.getText());
-                this.grounds = new ForestedEquator(this.equatorWidth, this.equatorHeigth, this.mapWidth, this.mapHeight);
+                this.height = 800 / (this.mapHeight + 1);
+                this.width = 800 / (this.mapWidth + 1);
+
+                if (this.border.equals("Hell")) {
+                    this.penalty = Integer.parseInt(penalty.getText());
+                    this.borders = new HellPortal(this.mapWidth, this.mapHeight, this.penalty);
+                } else {
+                    this.borders = new Globe(this.mapWidth, this.mapHeight);
+                }
+
+                if (this.ground.equals("Equator")) {
+                    this.equatorWidth = Integer.parseInt(equatorWidth.getText());
+                    this.equatorHeigth = Integer.parseInt(equatorHeight.getText());
+                    this.grounds = new ForestedEquator(this.equatorWidth, this.equatorHeigth, this.mapWidth, this.mapHeight);
+                } else {
+                    this.grounds = new ToxicCorpses(this.mapWidth, this.mapHeight);
+                }
+
+                this.plantsEnergy = Integer.parseInt(plantsEnergy.getText());
+                this.startingPlants = Integer.parseInt(startingPlants.getText());
+                this.plantsGrowth = Integer.parseInt(plantsGrowth.getText());
+
+                this.animalsStartingEnergy = Integer.parseInt(animalsStartingEnergy.getText());
+                this.animalsReproductionEnergy = Integer.parseInt(animalsReproductionEnergy.getText());
+                this.animalsStartNum = Integer.parseInt(animalsStartNum.getText());
+                this.animalMaxEnergy = Integer.parseInt(animalMaxEnergy.getText());
+
+                this.Geneslen = Integer.parseInt(Geneslen.getText());
+                this.maxMutations = Integer.parseInt(maxMutations.getText());
+                this.minMutations = Integer.parseInt(minMutations.getText());
+
+                this.moveDelay = Integer.parseInt(moveDelay.getText());
+                this.dayCost = Integer.parseInt(dayCost.getText());
             }
-            else {this.grounds = new ToxicCorpses(this.mapWidth, this.mapHeight);}
-
-            this.plantsEnergy = Integer.parseInt(plantsEnergy.getText());
-            this.startingPlants = Integer.parseInt(startingPlants.getText());
-            this.plantsGrowth = Integer.parseInt(plantsGrowth.getText());
-
-            this.animalsStartingEnergy = Integer.parseInt(animalsStartingEnergy.getText());
-            this.animalsReproductionEnergy = Integer.parseInt(animalsReproductionEnergy.getText());
-            this.animalsStartNum = Integer.parseInt(animalsStartNum.getText());
-            this.animalMaxEnergy = Integer.parseInt(animalMaxEnergy.getText());
-
-            this.Geneslen = Integer.parseInt(Geneslen.getText());
-            this.maxMutations = Integer.parseInt(maxMutations.getText());
-            this.minMutations = Integer.parseInt(minMutations.getText());
-
-            this.moveDelay = Integer.parseInt(moveDelay.getText());
-            this.dayCost = Integer.parseInt(dayCost.getText());
-
             this.map = new World(this.mapWidth, this.mapHeight, this.borders, this.grounds, this.plantsEnergy, this.startingPlants, this.plantsGrowth, this.animalsStartingEnergy, this.animalsReproductionEnergy, this.animalsStartNum, this.minMutations, this.maxMutations, this.Geneslen, this.animalMaxEnergy, this.movingStyle, this.mutationStyle);
             this.engine = new SimulationEngine(this, this.map, this.moveDelay, this.dayCost);
             map.addEngine(this.engine);
@@ -284,6 +368,8 @@ public class App extends Application{
                 this.smooth = true;
             }
         });
+
+
         //HBox a = new HBox(label, width, label2, height);
         //HBox b0 = new HBox(border);
         //HBox c = new HBox(label6, plantsEnergy, label7, startingPlants, label8, plantsGrowth);
@@ -293,7 +379,7 @@ public class App extends Application{
         //HBox g = new HBox(moveStyl, mutationStyl);
         //VBox all = new VBox(a, b0, b, c, d, e, f, g, play);
 
-        VBox all = new VBox(label, width, label2, height, border, b,ground, b99, label6, plantsEnergy, label7, startingPlants, label8, plantsGrowth, label9, animalsStartingEnergy, label10, animalsReproductionEnergy, label11, animalsStartNum, label12, animalMaxEnergy, label13, Geneslen, label14, maxMutations, label15, minMutations, label16, moveDelay, label17, dayCost, moveStyl, mutationStyl, smuth, play);
+        VBox all = new VBox(label, width, label2, height, border, b,ground, b99, label6, plantsEnergy, label7, startingPlants, label8, plantsGrowth, label9, animalsStartingEnergy, label10, animalsReproductionEnergy, label11, animalsStartNum, label12, animalMaxEnergy, label13, Geneslen, label14, maxMutations, label15, minMutations, label16, moveDelay, label17, dayCost, moveStyl, mutationStyl, fileBox, play);
         Scene scene = new Scene(all,1000, 800);
         menu.setScene(scene);
         menu.show();
@@ -353,7 +439,9 @@ public class App extends Application{
         });
 
         prepareScene();
+
         VBox map = new VBox(gridPane);
+        VBox stats = new VBox(this.stats);
         VBox buttonsAndStats = new VBox(hbox, hbox2, hbox3, smuth, hbox4, stats);
         HBox mapAndButtons = new HBox(buttonsAndStats, map);
 

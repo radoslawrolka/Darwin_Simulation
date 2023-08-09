@@ -87,20 +87,20 @@ public class SimulationEngine implements Runnable{
         return animals.size();
     }
 
-    public double getAvgEnergy() {
+    public int getAvgEnergy() {
         int sum = 0;
         for (Animal animal: animals) {
             sum += animal.getEnergy();
         }
         //System.out.println("Average energy: " + sum/animals.size());
-        return (double)sum/animals.size();
+        return (int)((double)sum/animals.size());
     }
 
-    public double getAvgLife() {
+    public int getAvgLife() {
         int sum = 0;
         for (Animal animal: animals) {
             sum += animal.getAge();
         }
-        return ((double)sum/animals.size());
+        return (int)((double)sum/animals.size());
     }
 }
