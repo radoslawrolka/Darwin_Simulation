@@ -1,7 +1,5 @@
 package agh.ics.oop.gui;
 
-
-import agh.ics.oop.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
