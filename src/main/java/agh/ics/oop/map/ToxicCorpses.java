@@ -8,12 +8,11 @@ public class ToxicCorpses implements IMapGrounds{
     private final Random random = new Random();
     private final int mapWidth;
     private final int mapHeight;
-    private final World map;
+    private World map;
 
-    public ToxicCorpses(int mapWidth, int mapHeight, World map) {
+    public ToxicCorpses(int mapWidth, int mapHeight) {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.map = map;
     }
 
     @Override
@@ -41,4 +40,7 @@ public class ToxicCorpses implements IMapGrounds{
         }
     }
 
+    public void addMap(World map) {
+        this.map = map;
+    }
 }

@@ -37,7 +37,7 @@ public class SimulationEngine implements Runnable{
             //System.out.println(" Animals: " + animals.size() );
             map.growPlants();
             addDay();
-            map.draw();
+            //map.draw();
             app.refreshMap();
             try {
                 Thread.sleep(MoveDelay);

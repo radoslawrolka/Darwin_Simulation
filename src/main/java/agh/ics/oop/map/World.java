@@ -61,6 +61,9 @@ public class World {
                 freePositions.add(position);
             }
         }
+        if (mapGrounds instanceof ToxicCorpses) {
+            ((ToxicCorpses) mapGrounds).addMap(this);
+        }
     }
 
     public void addEngine(SimulationEngine engine) {
