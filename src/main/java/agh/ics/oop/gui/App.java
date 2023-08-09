@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class App extends Application{
@@ -53,6 +55,7 @@ public class App extends Application{
     private int dayCost=1;
     private boolean smooth = true;
     private GridPane stats = new GridPane();
+    private File csvFile = new File("C:/Users/acer/Desktop/java/Evolution_Game/src/main/resources/statistics.csv");
 
     public void xyLabel(){
         GridPane.setHalignment(new Label("y/x"), HPos.CENTER);
@@ -130,6 +133,32 @@ public class App extends Application{
 
         //stats.getChildren().addAll(day, animals, plants, avgEnergy, avgLife, avgDeath, topGenes);
         stats.setAlignment(javafx.geometry.Pos.CENTER);
+
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(csvFile, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        StringBuilder line = new StringBuilder();
+        line.append(engine.getDay()).append(",");
+        line.append(engine.getAnimalsNum()).append(",");
+        line.append(map.getPlantsNum()).append(",");
+        line.append(engine.getAvgEnergy()).append(",");
+        line.append(engine.getAvgLife()).append(",");
+        line.append(map.getAvgDeath()).append(",");
+        line.append(map.getTopGenom());
+        line.append("\n");
+        try {
+            fileWriter.write(line.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            fileWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void makeStat() {
