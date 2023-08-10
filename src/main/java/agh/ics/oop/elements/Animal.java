@@ -18,7 +18,7 @@ public class Animal implements IElement {
     private final int maxEnergy;
     private int age;
     private final int birthDay;
-    private int deathDay;
+    private int deathDay = -1;
     private final int[] genes;
     private int genesIndex;
     private int counterChildren;
@@ -101,8 +101,17 @@ public class Animal implements IElement {
 
 
 
-
-
+    public String energyLevel() {
+        if ((double)this.energy/this.maxEnergy >= 0.9) {
+            return "max";
+        }
+        else if ((double)this.energy/this.maxEnergy <= 0.2) {
+            return "low";
+        }
+        else {
+            return "mid";
+        }
+    }
 
 
 

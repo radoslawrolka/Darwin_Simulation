@@ -60,6 +60,8 @@ public class App extends Application{
     private int dayCost=1;
     private int smooth = 0;
     private GridPane stats = new GridPane();
+    private GridPane follow = new GridPane();
+    private Animal followedAnimal = null;
     private File csvFile = new File("C:/Users/acer/Desktop/java/Evolution_Game/src/main/resources/statistics.csv");
 
     public void xyLabel(){
@@ -137,13 +139,18 @@ public class App extends Application{
                             stackPane.getChildren().add(circle);
                         }
                         else {
-                            String lvl = map.energyLevel(pos);
+                            Animal animal = map.getAnimal(pos);
+                            String lvl = animal.energyLevel();
                             Color color = Color.RED;
                             if (lvl.equals("max")) {color = Color.BLUE;}
                             else if (lvl.equals("mid")) {color = Color.ORANGE;}
                             else {color = Color.RED;}
                             Circle circle = new Circle(this.width / 2, color);
                             stackPane.getChildren().add(circle);
+                            gridPane.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                                followedAnimal = animal;
+                                System.out.println("Energy: " + followedAnimal.getEnergy());
+                            });
                         }
                         gridPane.add(stackPane, i, mapHeight - j + 1);
                         GridPane.setHalignment(stackPane, HPos.CENTER);
@@ -153,7 +160,7 @@ public class App extends Application{
                     String element = map.isAt(pos);
                     String background = map.groundType(pos);
 
-                    GuiElementBox elementBox = new GuiElementBox(element, background);
+                    GuiElementBox elementBox = new GuiElementBox(element, background, this.width, this.height);
                     gridPane.add(elementBox.getvBox(),i,mapHeight-j+1);
                     GridPane.setHalignment(elementBox.getvBox(),HPos.CENTER);
 
@@ -186,6 +193,34 @@ public class App extends Application{
         stats.add(topGenes, 0, 6);
         GridPane.setHalignment(topGenes, HPos.CENTER);
 
+
+        if (!(this.followedAnimal == null)) {
+            //stats.getChildren().clear();
+            Label label = new Label("Followed animal:");
+            stats.add(label, 0, 8);
+            Label energy = new Label("Energy: " + this.followedAnimal.getEnergy());
+            stats.add(energy, 0, 9);
+            GridPane.setHalignment(energy, HPos.CENTER);
+            Label age = new Label("Age: " + this.followedAnimal.getAge());
+            stats.add(age, 0, 10);
+            GridPane.setHalignment(age, HPos.CENTER);
+            Label birthDay = new Label("Birth day: " + this.followedAnimal.getBirthDay());
+            stats.add(birthDay, 0, 11);
+            GridPane.setHalignment(birthDay, HPos.CENTER);
+            Label deathDay = new Label("Death day: " + this.followedAnimal.getDeathDay());
+            stats.add(deathDay, 0, 12);
+            GridPane.setHalignment(deathDay, HPos.CENTER);
+            Label genes = new Label("Genes: " + this.followedAnimal.getGenesIndex());
+            stats.add(genes, 0, 13);
+            GridPane.setHalignment(genes, HPos.CENTER);
+            Label children = new Label("Children: " + this.followedAnimal.getCounterChildren());
+            stats.add(children, 0, 14);
+            GridPane.setHalignment(children, HPos.CENTER);
+            Label plantes = new Label("Plants eaten: " + this.followedAnimal.getCounterPlantsEaten());
+            stats.add(plantes, 0, 15);
+            GridPane.setHalignment(plantes, HPos.CENTER);
+        }
+
         //stats.getChildren().addAll(day, animals, plants, avgEnergy, avgLife, avgDeath, topGenes);
         stats.setAlignment(javafx.geometry.Pos.CENTER);
 
@@ -217,7 +252,7 @@ public class App extends Application{
     }
 
     public void makeStat() {
-        for (int i=0; i<7; i++) {
+        for (int i=0; i<16; i++) {
             stats.getRowConstraints().add(new RowConstraints(30));
         }
     }
@@ -519,7 +554,7 @@ public class App extends Application{
         prepareScene();
 
         VBox map = new VBox(gridPane);
-        VBox stats = new VBox(this.stats);
+        VBox stats = new VBox(this.stats, this.follow);
         VBox buttonsAndStats = new VBox(hbox, hbox2, hbox3, smuth, hbox4, stats);
         HBox mapAndButtons = new HBox(buttonsAndStats, map);
 
