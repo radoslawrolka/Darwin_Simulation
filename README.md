@@ -64,7 +64,7 @@ After the game you can analise the data in CSV file.
 
 # Gallery
 
-![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Menu.png)
-![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Smooth.png)
-![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Classic.png)
-![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Beautiful_Graphics.png)
+<img src="/src/main/resources/Menu.png" width="600"/>
+<img src="/src/main/resources/Smooth.png" width="600"/>
+<img src="/src/main/resources/Classic.png" width="600"/>
+<img src="/src/main/resources/Beautiful_graphics.png" width="600"/>
