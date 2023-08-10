@@ -13,18 +13,18 @@ public class GuiElementBox {
     protected ImageView backgroundView;
     protected VBox vBox = new VBox();
 
-    public GuiElementBox(String element, String background) {
+    public GuiElementBox(String element, String background, int width, int height) {
         //System.out.println(element);
         //System.out.println(background);
         if (element.equals("plant")) {
             this.image = new Image("/" + element + ".png");
             this.imageView = new ImageView(image);
-            imageView.setFitHeight(50);
-            imageView.setFitWidth(50);
+            imageView.setFitHeight(height);
+            imageView.setFitWidth(width);
             this.background = new Image("/" + background + ".png");
             this.backgroundView = new ImageView(this.background);
-            backgroundView.setFitHeight(50);
-            backgroundView.setFitWidth(50);
+            backgroundView.setFitHeight(height);
+            backgroundView.setFitWidth(width);
             StackPane stackPane = new StackPane();
             stackPane.getChildren().addAll(backgroundView, imageView);
             vBox.getChildren().addAll(stackPane);
@@ -32,20 +32,20 @@ public class GuiElementBox {
         else if (element.equals(" ")) {
             this.image = new Image("/" + background + ".png");
             this.imageView = new ImageView(image);
-            imageView.setFitHeight(50);
-            imageView.setFitWidth(50);
+            imageView.setFitHeight(height);
+            imageView.setFitWidth(width);
             vBox.getChildren().addAll(imageView);
         }
         else {
             this.image = new Image("/animal.png");
             this.imageView = new ImageView(image);
-            imageView.setFitHeight(30);
-            imageView.setFitWidth(30);
+            imageView.setFitHeight(height-(0.2*height));
+            imageView.setFitWidth(width-(0.2*width));
             Label label = new Label(element);
             this.background = new Image("/" + background + ".png");
             this.backgroundView = new ImageView(this.background);
-            backgroundView.setFitHeight(50);
-            backgroundView.setFitWidth(50);
+            backgroundView.setFitHeight(height);
+            backgroundView.setFitWidth(width);
             StackPane stackPane = new StackPane();
             VBox vbox = new VBox();
             vbox.getChildren().addAll(imageView, label);
