@@ -230,6 +230,24 @@ public class World {
         }
     }
 
+    public String energyLevel(Vector2d position) {
+        int val = -1;
+        for (Animal animal : animals.get(position)) {
+            if (animal.getEnergy() > val) {
+                val = animal.getEnergy();
+            }
+        }
+        if ((double)val/AnimalMaxEnergy >= 0.9) {
+            return "max";
+        }
+        else if ((double)val/AnimalMaxEnergy <= 0.2) {
+            return "low";
+        }
+        else {
+            return "mid";
+        }
+    }
+
     public String groundType(Vector2d position) {
         return mapGrounds.groundType(position);
     }

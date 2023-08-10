@@ -14,7 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -53,7 +58,7 @@ public class App extends Application{
     private MutationStyle mutationStyle = MutationStyle.FULLY_RANDOM;
     private int moveDelay= 1000;
     private int dayCost=1;
-    private boolean smooth = true;
+    private int smooth = 0;
     private GridPane stats = new GridPane();
     private File csvFile = new File("C:/Users/acer/Desktop/java/Evolution_Game/src/main/resources/statistics.csv");
 
@@ -89,10 +94,60 @@ public class App extends Application{
             for (int j = mapHeight; j >= 1; j--) {
                 Vector2d pos = new Vector2d(i,j);
 
-                if (this.smooth) {
+                if (this.smooth == 0) {
                     Label label = new Label(map.isAt(pos));
                     GridPane.setHalignment(label, HPos.CENTER);
                     gridPane.add(label, i, mapHeight-j+1);
+                }
+                else if (this.smooth == 1) {
+                    if (map.isAt(pos).equals(" ")) {
+                        if (map.groundType(pos).equals("toxic")) {
+                            Rectangle rectangle = new Rectangle(this.width, this.height, Color.YELLOW);
+                            gridPane.add(rectangle, i, mapHeight - j + 1);
+                            GridPane.setHalignment(rectangle, HPos.CENTER);
+                        }
+                        else if (map.groundType(pos).equals("equator")) {
+                            Rectangle rectangle = new Rectangle(this.width, this.height, Color.DARKGREEN);
+                            gridPane.add(rectangle, i, mapHeight - j + 1);
+                            GridPane.setHalignment(rectangle, HPos.CENTER);
+                        }
+                        else {
+                            Rectangle rectangle = new Rectangle(this.width, this.height, Color.GREEN);
+                            gridPane.add(rectangle, i, mapHeight - j + 1);
+                            GridPane.setHalignment(rectangle, HPos.CENTER);
+                        }
+                    }
+                    else {
+                        StackPane stackPane = new StackPane();
+                        if (map.groundType(pos).equals("toxic")) {
+                            Rectangle rectangle = new Rectangle(this.width, this.height, Color.YELLOW);
+                            stackPane.getChildren().add(rectangle);
+                        }
+                        else if (map.groundType(pos).equals("equator")) {
+                            Rectangle rectangle = new Rectangle(this.width, this.height, Color.DARKGREEN);
+                            stackPane.getChildren().add(rectangle);
+                        }
+                        else {
+                            Rectangle rectangle = new Rectangle(this.width, this.height, Color.GREEN);
+                            stackPane.getChildren().add(rectangle);
+                        }
+
+                        if (map.isAt(pos).equals("plant")) {
+                            Circle circle = new Circle(this.width / 4, Color.PINK);
+                            stackPane.getChildren().add(circle);
+                        }
+                        else {
+                            String lvl = map.energyLevel(pos);
+                            Color color = Color.RED;
+                            if (lvl.equals("max")) {color = Color.BLUE;}
+                            else if (lvl.equals("mid")) {color = Color.ORANGE;}
+                            else {color = Color.RED;}
+                            Circle circle = new Circle(this.width / 2, color);
+                            stackPane.getChildren().add(circle);
+                        }
+                        gridPane.add(stackPane, i, mapHeight - j + 1);
+                        GridPane.setHalignment(stackPane, HPos.CENTER);
+                    }
                 }
                 else {
                     String element = map.isAt(pos);
@@ -339,6 +394,7 @@ public class App extends Application{
                 if (sc.next().equals("FR")) {this.mutationStyle = MutationStyle.FULLY_RANDOM;}
                 else {this.mutationStyle = MutationStyle.LITTLE_CORRECTION;}
                 sc.close();
+
             }
             else {
                 this.mapHeight = Integer.parseInt(height.getText());
@@ -386,17 +442,6 @@ public class App extends Application{
             startGame(gameStage);
         });
 
-        Button smuth = new Button("[Smooth] - Change to Beautiful");
-        smuth.setOnAction(event -> {
-            if(this.smooth){
-                smuth.setText("[Beautiful] - Change to smooth");
-                this.smooth = false;
-            }
-            else{
-                smuth.setText("[Smooth] - Change to Beautiful");
-                this.smooth = true;
-            }
-        });
 
 
         //HBox a = new HBox(label, width, label2, height);
@@ -435,15 +480,19 @@ public class App extends Application{
             Platform.exit();
         });
 
-        Button smuth = new Button("[Smooth] - Change to Beautiful");
+        Button smuth = new Button("[Smooth] - Change to Classic");
         smuth.setOnAction(event -> {
-            if(this.smooth){
-                smuth.setText("[Beautiful] - Change to smooth");
-                this.smooth = false;
+            if(this.smooth == 0){
+                smuth.setText("[Classic] - Change to beautiful");
+                this.smooth = 1;
+            }
+            else if (this.smooth == 1) {
+                smuth.setText("[Beautiful] - Change to Smooth");
+                this.smooth = 2;
             }
             else{
-                smuth.setText("[Smooth] - Change to Beautiful");
-                this.smooth = true;
+                smuth.setText("[Smooth] - Change to Classic");
+                this.smooth = 0;
             }
         });
 
