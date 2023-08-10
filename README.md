@@ -61,3 +61,10 @@ During the simulation you can:
 After the game you can analise the data in CSV file.
 
 (right now only in ```src/main/resources/statistics.csv```)
+
+# Gallery
+
+![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Menu.png)
+![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Smooth.png)
+![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Classic.png)
+![alt text](https://github.com/radoslawrolka/Darwin_Simulation/tree/master/src/main/resources/Beautiful_Graphics.png)
