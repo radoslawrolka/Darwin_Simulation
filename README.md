@@ -52,8 +52,9 @@ Example in ```src/main/resources/Zeszyt1.csv```
 During the simulation you can:
 - pause/resume the game,
 - start a new game,
-- change graphics (quite laggy, but beautiful, advised to set map max to ```10x10``` and moveDelay to ```1000```),
-- check actual statistics.
+- change graphics (basics names, classic, beautiful (quite laggy, but amazing, advised to set map max to ```10x10``` and moveDelay to ```1000```)),
+- check actual statistics,
+- follow choosen animal and see its stats.
 
 # Output
 
