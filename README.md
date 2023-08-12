@@ -7,7 +7,7 @@ More info about the project here: https://github.com/apohllo/obiektowe-lab/tree/
 
 While starting this app you can either:
 - fill menu page with all required data,
-- use CSV file (safe mode: files are availible only from ```src/resources/<filename>.csv```).
+- use CSV file (safe mode: files are availible only from ```src/resources/<filename>.csv```). (check in gallery below to see how to run setup from file)
 
 [data entry order]
   
