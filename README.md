@@ -65,6 +65,7 @@ After the game you can analise the data in CSV file.
 # Gallery
 - Menu window:
 <img src="/src/main/resources/Menu.png" width="600"/>
+- smooth graphic settings:
 <img src="/src/main/resources/Smooth.png" width="600"/>
 <img src="/src/main/resources/Classic.png" width="600"/>
 <img src="/src/main/resources/Beautiful_graphics.png" width="600"/>
