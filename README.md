@@ -52,7 +52,7 @@ Example in ```src/main/resources/Zeszyt1.csv```
 During the simulation you can:
 - pause/resume the game,
 - start a new game,
-- change graphics (basics names, classic, beautiful (quite laggy, but amazing, advised to set map max to ```10x10``` and moveDelay to ```1000```)),
+- change graphics (basics names, classic, beautiful),
 - check actual statistics,
 - follow choosen animal and see its stats.
 
@@ -65,7 +65,9 @@ After the game you can analise the data in CSV file.
 # Gallery
 - Menu window:
 <img src="/src/main/resources/Menu.png" width="600"/>
-- smooth graphic settings:
+- Smooth graphic settings:
 <img src="/src/main/resources/Smooth.png" width="600"/>
+- Classic graphic settings:
 <img src="/src/main/resources/Classic.png" width="600"/>
+- Beautiuf graphic settings (MustSee!!!):
 <img src="/src/main/resources/Beautiful_graphics.png" width="600"/>
