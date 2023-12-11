@@ -6,6 +6,7 @@ public class Genotype {
     protected final int[] genes;
     protected int current_gene;
 
+    // energy1 > energy2
     public Genotype(int[] parent1, int[] parent2, int energy1, int energy2) {
         this.genes = new int[parent1.length];
         this.current_gene = new Random().nextInt(this.genes.length);
