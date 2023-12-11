@@ -1,13 +1,12 @@
 package agh.ics.oop.model;
 
 public class CrazyGenotype extends Genotype{
-
-
-    public CrazyGenotype(String genotype_p1, String genotype_p2) {
-        super(genotype_p1, genotype_p2);
+    public CrazyGenotype(int[] parent1, int[] parent2, int energy1, int energy2) {
+        super(parent1, parent2, energy1, energy2);
     }
 
     @Override
-    public void nextGene(){
+    public int getGene() {
+        return 1;
     }
 }
