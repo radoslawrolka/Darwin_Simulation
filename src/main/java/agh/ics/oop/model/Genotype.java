@@ -38,5 +38,11 @@ public class Genotype {
             System.arraycopy(parent2, 0, this.genes, 0, ratio);
             System.arraycopy(parent1, ratio, this.genes, ratio, this.genes.length - ratio);
         }
+        int mutation = new Random().nextInt(0,this.genes.length+1);
+        while (mutation < this.genes.length) {
+            this.genes[mutation] = new Random().nextInt(8);
+            mutation = new Random().nextInt(mutation, this.genes.length+1);
+        }
+
     }
 }
