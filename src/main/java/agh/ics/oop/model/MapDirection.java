@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public enum MapDirection {
     NORTH,
     NORTHEAST,
@@ -41,9 +39,5 @@ public enum MapDirection {
             case WEST -> new Vector2d(-1, 0);
             case NORTHWEST -> new Vector2d(-1, 1);
         };
-    }
-
-    public MapDirection random() {
-        return MapDirection.values()[ThreadLocalRandom.current().nextInt(MapDirection.values().length)];
     }
 }

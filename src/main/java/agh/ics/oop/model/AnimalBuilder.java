@@ -8,8 +8,6 @@ public class AnimalBuilder {
     private Function<Integer, Genotype> genotypeConstructorSpawner;
     private Function<Integer[], Function<Integer[], Function<Integer, Function<Integer, Genotype>>>> genotypeConstructorBreeder;
 
-    public AnimalBuilder() {}
-
     public AnimalBuilder genotypeLength(int genotypeLength) {
         this.genotypeLength = genotypeLength;
         return this;
