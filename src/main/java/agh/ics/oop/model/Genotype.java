@@ -3,33 +3,33 @@ package agh.ics.oop.model;
 import java.util.Random;
 
 public class Genotype {
-    protected final int[] genes;
-    protected int current_gene;
+    protected final Integer[] genes;
+    protected Integer current_gene;
 
-    public Genotype(int length) {
-        this.genes = new int[length];
+    public Genotype(Integer length) {
+        this.genes = new Integer[length];
         for (int i = 0; i < length; i++) {
             this.genes[i] = new Random().nextInt(8);
         }
         this.current_gene = new Random().nextInt(this.genes.length);
     }
 
-    public Genotype(int[] parent1, int[] parent2, int energy1, int energy2) {
-        this.genes = new int[parent1.length];
+    public Genotype(Integer[] parent1, Integer[] parent2, Integer energy1, Integer energy2) {
+        this.genes = new Integer[parent1.length];
         this.current_gene = new Random().nextInt(this.genes.length);
         createGenotype(parent1, parent2, energy1, energy2);
     }
 
-    public int[] getGenes() {
+    public Integer[] getGenes() {
         return this.genes;
     }
 
-    public int getMove() {
+    public Integer getMove() {
         this.current_gene = (this.current_gene + 1) % this.genes.length;
         return this.genes[this.current_gene];
     }
 
-    private void createGenotype(int[] parent1, int[] parent2, int energy1, int energy2) {
+    private void createGenotype(Integer[] parent1, Integer[] parent2, int energy1, int energy2) {
         int ratio = (energy1 / (energy1+energy2))*this.genes.length;
         if (new Random().nextBoolean()) {
             System.arraycopy(parent1, 0, this.genes, 0, ratio);
