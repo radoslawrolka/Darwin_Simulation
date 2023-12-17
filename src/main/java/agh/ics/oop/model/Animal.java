@@ -1,16 +1,33 @@
 package agh.ics.oop.model;
 
-public class Animal implements WorldElement{
+import java.util.concurrent.ThreadLocalRandom;
+
+public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
+    private final Genotype genotype;
+    private Integer energy;
 
-    public Animal(Vector2d initialPosition) {
-        this.orientation = MapDirection.NORTH;
+    public Animal(Vector2d initialPosition, int energy, Genotype genotype) {
+        this.orientation = MapDirection.values()[ThreadLocalRandom.current().nextInt(MapDirection.values().length)];
         this.position = initialPosition;
+        this.genotype = genotype;
+        this.energy = energy;
     }
 
-    public Animal() {
-        this (new Vector2d(2, 2));
+    public Animal(Vector2d initialPosition, Genotype genotype, int energy) {
+        this.orientation = MapDirection.values()[ThreadLocalRandom.current().nextInt(MapDirection.values().length)];
+        this.position = initialPosition;
+        this.genotype = genotype;
+        this.energy = energy;
+    }
+
+    public Genotype getGenotype() {
+        return this.genotype;
+    }
+
+    public int getEnergy() {
+        return this.energy;
     }
 
     public MapDirection getOrientation() {
@@ -29,20 +46,8 @@ public class Animal implements WorldElement{
         return this.position.equals(position);
     }
 
-    public void move(MoveValidator validator, MoveDirection direction) {
-        switch (direction) {
-            case FORWARD, BACKWARD -> {
-                Vector2d unitVector = this.orientation.toUnitVector();
-                if (direction == MoveDirection.BACKWARD) {
-                    unitVector = unitVector.opposite();
-                }
-                Vector2d newPosition = this.position.add(unitVector);
-                if (validator.canMoveTo(newPosition)) {
-                    this.position = newPosition;
-                }
-            }
-            case RIGHT -> this.orientation = this.orientation.next();
-            case LEFT -> this.orientation = this.orientation.previous();
-        }
+    public void move(MoveValidator validator) {
+        this.orientation = this.orientation.next(this.genotype.getMove());
+        this.position = validator.getPosition(this.position, this.orientation.toUnitVector());
     }
 }
