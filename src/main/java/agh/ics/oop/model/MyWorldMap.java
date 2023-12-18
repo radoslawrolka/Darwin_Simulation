@@ -2,18 +2,24 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
-    protected final Map<Vector2d, Animal> animals = new HashMap<>();
-    protected List<MapChangeListener> observers = new ArrayList<>();
+public class MyWorldMap implements WorldMap<WorldElement, Vector2d>{
+    private final Map<Vector2d, Animal> animals = new HashMap<>();
+    private List<MapChangeListener> observers = new ArrayList<>();
+    private final HashMap<Vector2d,Grass> grasses = new HashMap<>();
 
-    @Override
-    public boolean canMoveTo(Vector2d position) {
-        return !(isOccupied(position) && objectAt(position) instanceof Animal);
+    private final Vector2d mapSize;
+    private int grassDailyGrowth;
+    private final GrassGrow field;
+    private final Borders borders;
+
+    public MyWorldMap(int grassDailyGrowth, Vector2d mapSize,GrassGrow field, int grassNumber, Borders borders) {
+        this.mapSize = mapSize;
+        this.grassDailyGrowth = grassDailyGrowth;
+        this.field = field;
+        this.borders = borders;
+        field.plantGrass(grassNumber,mapSize,grasses);
     }
 
     @Override
@@ -47,11 +53,11 @@ public abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2
     }
 
     @Override
-    public void move(WorldElement object, MoveDirection direction) {
+    public void move(WorldElement object, MapDirection direction) {
         Vector2d oldPosition = object.getPosition();
         if (object instanceof Animal) {
             MapDirection oldOrientation =  ((Animal) object).getOrientation();
-            ((Animal) object).move(this, direction);
+            ((Animal) object).move(this);
             Vector2d newPosition = object.getPosition();
             if (oldPosition != newPosition) {
                 animals.remove(oldPosition);
@@ -70,7 +76,9 @@ public abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2
         return elements;
     }
 
-    public abstract Boundary getCurrentBounds();
+    public Boundary getCurrentBounds(){
+        return new Boundary(new Vector2d(0,0), mapSize);
+    }
 
     @Override
     public String toString() {
