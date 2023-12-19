@@ -43,6 +43,5 @@ public class Genotype {
             this.genes[mutation] = new Random().nextInt(8);
             mutation = new Random().nextInt(mutation, this.genes.length+1);
         }
-
     }
 }
