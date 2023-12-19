@@ -3,17 +3,15 @@ package agh.ics.oop.model;
 import java.util.function.Function;
 
 public class AnimalBuilder {
-    private int genotypeLength;
-    private int energy;
+    private final int genotypeLength;
     private int day = 0;
-    private Function<Integer, Genotype> genotypeConstructorSpawner;
-    private Function<Integer[], Function<Integer[], Function<Integer, Function<Integer, Genotype>>>> genotypeConstructorBreeder;
+    private final Function<Integer, Genotype> genotypeConstructorSpawner;
+    private final Function<Integer[], Function<Integer[], Function<Integer, Function<Integer, Genotype>>>> genotypeConstructorBreeder;
 
     public AnimalBuilder(int genotypeLength,
                          GenotypeEnum genotype,
                          int energy) {
         this.genotypeLength = genotypeLength;
-        this.energy = energy;
         if (genotype == GenotypeEnum.NORMAL) {
             genotypeConstructorSpawner = length -> new Genotype(length);
             genotypeConstructorBreeder = genes1 -> genes2 -> energy1 -> energy2 -> new Genotype(genes1, genes2, energy1, energy2);

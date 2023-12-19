@@ -4,11 +4,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Animal implements WorldElement {
     public static final int MAX_ENERGY;
+    private final Genotype genotype;
+    private final Statistics stats;
     private MapDirection orientation;
     private Vector2d position;
-    private final Genotype genotype;
     private Integer energy = MAX_ENERGY;
-    private final Statistics stats;
+
 
     public Animal(Vector2d initialPosition,
                   Genotype genotype,
