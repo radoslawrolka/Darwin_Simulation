@@ -18,6 +18,8 @@ public class Statistics {
         this.parent1 = parent1;
         this.parent2 = parent2;
         this.dayOfBirth = dayOfBirth;
+        this.parent1.addChild();
+        this.parent2.addChild();
     }
 
     public void addDay() {
@@ -28,18 +30,12 @@ public class Statistics {
         this.plantsEaten++;
     }
 
-    public void addChild() {
+    private void addChild() {
         this.children++;
-        this.descendants++;
-        if (this.parent1 != null) {
-            this.parent1.addDescendant();
-        }
-        if (this.parent2 != null) {
-            this.parent2.addDescendant();
-        }
+        addDescendant();
     }
 
-    public void addDescendant() {
+    private void addDescendant() {
         this.descendants++;
         if (this.parent1 != null) {
             this.parent1.addDescendant();
