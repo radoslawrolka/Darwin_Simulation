@@ -31,6 +31,10 @@ public class Animal implements WorldElement {
         return this.energy;
     }
 
+    public void changeEnergy(int delta) {
+        this.energy += delta;
+    }
+
     public Statistics getStats() {
         return this.stats;
     }
@@ -39,12 +43,9 @@ public class Animal implements WorldElement {
         return this.orientation;
     }
 
+    @Override
     public Vector2d getPosition() {
         return this.position;
-    }
-
-    public String toString() {
-        return this.orientation.toString();
     }
 
     public boolean isAt(Vector2d position) {
