@@ -10,7 +10,6 @@ public class Animal implements WorldElement {
     private Vector2d position;
     private Integer energy = MAX_ENERGY;
 
-
     public Animal(Vector2d initialPosition,
                   Genotype genotype,
                   Statistics stats) {
