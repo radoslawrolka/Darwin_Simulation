@@ -52,4 +52,23 @@ public class Statistics {
     public void setDayOfDeath(int dayOfDeath) {
         this.dayOfDeath = dayOfDeath;
     }
+
+    public int getChildren() {
+        return this.children;
+    }
+    public int getDescendants() {
+        return this.descendants;
+    }
+    public int getDaysAlive() {
+        return this.daysAlive;
+    }
+    public int getPlantsEaten() {
+        return this.plantsEaten;
+    }
+    public int getDayOfBirth() {
+        return this.dayOfBirth;
+    }
+    public int getDayOfDeath() {
+        return this.dayOfDeath;
+    }
 }
