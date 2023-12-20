@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface GrassGrow {
 
-    void plantGrass(int grassNumber,Vector2d mapSize, HashMap<Vector2d,Grass> grasses);
+    void plantGrass(int grassNumber, HashMap<Vector2d,Grass> grasses);
+
+    void eatGrass(List<Vector2d> eatenPositions, HashMap<Vector2d,Grass> grasses);
 
 }
