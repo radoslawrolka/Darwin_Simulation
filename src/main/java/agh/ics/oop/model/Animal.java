@@ -10,7 +10,7 @@ public class Animal implements WorldElement {
     private Vector2d position;
     private Integer energy = MAX_ENERGY;
 
-    public Animal(Vector2d initialPosition,
+    protected Animal(Vector2d initialPosition,
                   Genotype genotype,
                   Statistics stats) {
         this.orientation = MapDirection.values()[ThreadLocalRandom.current().nextInt(MapDirection.values().length)];
