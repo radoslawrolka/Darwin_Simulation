@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CrazyGenotype extends Genotype{
     public CrazyGenotype(Integer length) {
@@ -13,11 +14,11 @@ public class CrazyGenotype extends Genotype{
 
     @Override
     public Integer getMove() {
-        if (new Random().nextInt(5) != 4) {
+        if (ThreadLocalRandom.current().nextInt(5) != 4) {
             return super.getMove();
         }
         else {
-            this.current_gene = new Random().nextInt(this.genes.length);
+            this.current_gene = ThreadLocalRandom.current().nextInt(this.genes.length);
             return this.genes[this.current_gene];
         }
     }
