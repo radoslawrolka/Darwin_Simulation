@@ -1,14 +1,8 @@
 package agh.ics.oop.model;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
-
 public class Equator extends AbstractGrassPlanter {
-
-
-    private Vector2d lowerLeft;
-    private Vector2d upperRight;
+    private final Vector2d lowerLeft;
+    private final Vector2d upperRight;
 
     public Equator(Vector2d mapSize, int lowerY, int upperY) {
         super(mapSize);
