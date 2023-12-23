@@ -34,12 +34,10 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
     }
 
     public void plantGrassAtRandomPosition(Collection<Vector2d> positions) {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        int randomIndex = random.nextInt(positions.size());
-        int k = 0;
-
+        int randomIndex = ThreadLocalRandom.current().nextInt(positions.size());
+        
         Iterator<Vector2d> iterator = positions.iterator();
-        while (iterator.hasNext()) {
+        for (int k = 0; iterator.hasNext(); k++) {
             Vector2d position = iterator.next();
             if (k == randomIndex) {
                 grasses.put(position, new Grass(position));
@@ -47,9 +45,9 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
                 addPreferable(position);
                 break;
             }
-            k++;
         }
     }
+
     public abstract void addPreferable(Vector2d position);
 
     public boolean checkAvailability(Vector2d position) {
