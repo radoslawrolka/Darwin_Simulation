@@ -4,12 +4,9 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class AbstractGrassPlanter implements GrassPlanter {
-
     protected final Map<Vector2d, Integer> preferable = new HashMap<>();
-
     protected final Map<Vector2d,Grass> grasses = new HashMap<>();
     protected final Set<Vector2d> not_preferable = new HashSet<>();
-
     private final Vector2d mapSize;
 
     public AbstractGrassPlanter(Vector2d mapSize) {
@@ -20,11 +17,8 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
     public void plantGrass(int grassNumber) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int i = 0; i < grassNumber; i++) {
-            if (!preferable.isEmpty() || !not_preferable.isEmpty()) {
-                Collection<Vector2d> positions = random.nextInt(5) != 0
-                        ? preferable.keySet()
-                        : not_preferable;
-
+            if (!preferable.isEmpty() && !not_preferable.isEmpty()) {
+                Collection<Vector2d> positions = random.nextInt(5) != 0 ? preferable.keySet() : not_preferable;
                 plantGrassAtRandomPosition(positions);
             }
             else if (!preferable.isEmpty()){
@@ -32,6 +26,9 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
             }
             else if (!not_preferable.isEmpty()){
                 plantGrassAtRandomPosition(not_preferable);
+            }
+            else {
+                break;
             }
         }
     }

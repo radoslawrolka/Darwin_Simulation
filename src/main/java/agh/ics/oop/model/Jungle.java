@@ -1,11 +1,6 @@
 package agh.ics.oop.model;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class Jungle extends AbstractGrassPlanter {
-
-
     public Jungle(Vector2d mapSize) {
         super(mapSize);
         for(int i=0; i<mapSize.getX(); i++){
@@ -30,17 +25,27 @@ public class Jungle extends AbstractGrassPlanter {
         for (MapDirection direction : MapDirection.values()) {
             Vector2d newPosition = eatenPosition.add(direction.toUnitVector());
             if (super.checkAvailability(newPosition) && !grasses.containsKey(newPosition)) {
-                if (preferable.containsKey(newPosition)) {
-                    preferable.put(newPosition, preferable.get(newPosition) - 1);
+                preferable.compute(newPosition, (key, value) -> (value != null && value > 1) ? value - 1 : null);
+                if (preferable.get(newPosition) == null) {
+                    not_preferable.add(newPosition);
                 }
             }
         }
+        int isPreferable = 0;
+        for (MapDirection direction : MapDirection.values()) {
+            Vector2d newPosition = eatenPosition.add(direction.toUnitVector());
+            if (super.checkAvailability(newPosition) && grasses.containsKey(newPosition)) {
+                isPreferable += 1;
+                break;
+            }
+        }
+        if (isPreferable == 0) {
+            not_preferable.add(eatenPosition);
+        }
+        else {
+            preferable.put(eatenPosition, isPreferable);
+        }
+
+
     }
 }
-
-
-
-
-
-
-
