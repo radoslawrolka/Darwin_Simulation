@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-public interface MoveValidator<P> {
+public interface Borders<P> {
     /**
      * Return a position after moving in a given direction.
      *

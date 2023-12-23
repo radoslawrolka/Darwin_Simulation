@@ -1,56 +1,114 @@
 package agh.ics.oop.model;
 
-import java.util.List;
+import agh.ics.oop.model.util.MapVisualizer;
 
-/**
- * The interface responsible for interacting with the map of the world.
- * Assumes that Vector2d and MoveDirection classes are defined.
- *
- * @author apohllo, idzik
- */
-public interface WorldMap<T, P> extends MoveValidator<P> {
+import java.util.*;
 
-    /**
-     * Place a animal on the map.
-     *
-     * @param T The object to place on the map.
-     * @return True if the animal was placed. The animal cannot be placed if the move is not valid.
-     */
-    boolean place(T object);
+public class WorldMap{
+    private final Map<Vector2d, Animal> animals = new HashMap<>();
+    private List<MapChangeListener> observers = new ArrayList<>();
+    private final HashMap<Vector2d,Grass> grasses = new HashMap<>();
 
-    /**
-     * Moves an animal (if it is present on the map) according to specified direction.
-     * If the move is not possible, this method has no effect.
-     */
-    void move(T object, MoveDirection direction);
+    private final Vector2d mapSize;
+    private int grassDailyGrowth;
+    private GrassGrow field;
+    private Borders borders;
 
-    /**
-     * Return true if given position on the map is occupied. Should not be
-     * confused with canMove since there might be empty positions where the animal
-     * cannot move.
-     *
-     * @param position Position to check.
-     * @return True if the position is occupied.
-     */
-    boolean isOccupied(P position);
+    public WorldMap(int grassDailyGrowth, Vector2d mapSize, GrassGrow field, Borders borders, int grassNumber) {
+        this.mapSize = mapSize;
+        this.grassDailyGrowth = grassDailyGrowth;
+        this.field = field;
+        this.borders = borders;
+        field.plantGrass(grassNumber, grasses);
+    }
 
-    /**
-     * Return an animal at a given position.
-     *
-     * @param position The position of the animal.
-     * @return animal or null if the position is not occupied.
-     */
-    T objectAt(P position);
+    public void setField(GrassGrow field){
+        this.field = field;
+    }
 
-    List<T> getElements();
+    public void setBorders(Borders borders){
+        this.borders = borders;
+    }
 
-    void addObserver(MapChangeListener observer);
+    @Override
+    public boolean isOccupied(Vector2d position) {
+        return objectAt(position) != null;
+    }
 
-    void removeObserver(MapChangeListener observer);
+    @Override
+    public boolean place(WorldElement object) {
+        try {
+            if (canMoveTo(object.getPosition())) {
+                if (object instanceof Animal) {
+                    animals.put(object.getPosition(), (Animal) object);
+                    notifyObservers("Dodano zwierze na pozycji " + object.getPosition());
+                }
+                return true;
+            }
+            else {
+                throw new PositionAlreadyOccupiedException(object.getPosition());
+            }
 
-    void notifyObservers(String message);
+        } catch (PositionAlreadyOccupiedException e) {
+            System.err.println("Błąd: " + e.getMessage());
+            return false;
+        }
+    }
 
-    Boundary getCurrentBounds();
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        return animals.get(position);
+    }
 
-    String getId();
+    @Override
+    public void move(WorldElement object, MapDirection direction) {
+        Vector2d oldPosition = object.getPosition();
+        if (object instanceof Animal) {
+            MapDirection oldOrientation =  ((Animal) object).getOrientation();
+            ((Animal) object).move(this);
+            Vector2d newPosition = object.getPosition();
+            if (oldPosition != newPosition) {
+                animals.remove(oldPosition);
+                animals.put(newPosition, (Animal) object);
+                notifyObservers("Zwierze przemiescilo sie z " + oldPosition + " na " + newPosition);
+            }
+            else if (oldOrientation != ((Animal) object).getOrientation()) {
+                notifyObservers("Zwierze zmienilo orientacje z " + oldOrientation + " na " + ((Animal) object).getOrientation() + " na pozycji " + object.getPosition());
+            }
+        }
+    }
+
+    @Override
+    public List<WorldElement> getElements() {
+        List<WorldElement> elements = new ArrayList<>(animals.values());
+        return elements;
+    }
+
+    public Boundary getCurrentBounds(){
+        return new Boundary(new Vector2d(0,0), mapSize);
+    }
+
+    @Override
+    public String toString() {
+        Boundary bounds = getCurrentBounds();
+        return new MapVisualizer(this).draw(bounds.lowerLeft(), bounds.upperRight());
+    }
+
+    public void addObserver(MapChangeListener observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(MapChangeListener observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers(String message) {
+        for (MapChangeListener observer : observers) {
+            observer.mapChanged(this, message);
+        }
+    }
+
+    public String getId() {
+        return Integer.toString(this.hashCode());
+    }
 }
