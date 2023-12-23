@@ -52,8 +52,8 @@ public class Animal implements WorldElement {
         return this.position.equals(position);
     }
 
-    public void move(MoveValidator validator) {
+    public void move(Borders border) {
         this.orientation = this.orientation.next(this.genotype.getMove());
-        this.position = validator.getPosition(this.position, this.orientation.toUnitVector());
+        this.position = border.getPosition(this.position, this.orientation.toUnitVector());
     }
 }
