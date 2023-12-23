@@ -43,6 +43,5 @@ public class Genotype {
             this.genes[mutation] = ThreadLocalRandom.current().nextInt(8);
             mutation = ThreadLocalRandom.current().nextInt(mutation, this.genes.length+1);
         }
-
     }
 }
