@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 public class Statistics {
     private int children = 0;
-    private int daysAlive = 0;
     private int plantsEaten = 0;
     private int dayOfDeath = -1;
     private final int dayOfBirth;
@@ -22,10 +21,6 @@ public class Statistics {
         this.dayOfBirth = dayOfBirth;
         this.parent1.addChild(this.hashCode());
         this.parent2.addChild(this.hashCode());
-    }
-
-    public void addDay() {
-        this.daysAlive++;
     }
 
     public void addPlant() {

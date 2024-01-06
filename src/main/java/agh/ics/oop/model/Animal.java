@@ -39,6 +39,14 @@ public class Animal implements WorldElement {
         return this.stats;
     }
 
+    public int getDayOfBirth() {
+        return this.stats.getDayOfBirth();
+    }
+
+    public int getChildren() {
+        return this.stats.getChildren();
+    }
+
     public MapDirection getOrientation() {
         return this.orientation;
     }
