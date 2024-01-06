@@ -52,9 +52,6 @@ public class Statistics {
     public int getDescendants() {
         return this.descendantsSet.size();
     }
-    public int getDaysAlive() {
-        return this.daysAlive;
-    }
     public int getPlantsEaten() {
         return this.plantsEaten;
     }
