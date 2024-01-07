@@ -8,16 +8,20 @@ public class WorldMap{
     private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private List<MapChangeListener> observers = new ArrayList<>();
     private final Vector2d mapSize;
-    private int grassDailyGrowth;
     private GrassPlanter field;
     private Borders borders;
 
-    public WorldMap(int grassDailyGrowth, Vector2d mapSize, GrassPlanter field, Borders borders, int grassNumber) {
+    public WorldMap(Vector2d mapSize, int grassNumber){
         this.mapSize = mapSize;
-        this.grassDailyGrowth = grassDailyGrowth;
-        this.field = field;
-        this.borders = borders;
         field.plantGrass(grassNumber);
+    }
+
+    public void addPlanter(GrassPlanter planter){
+        this.field = planter;
+    }
+
+    public void addBorders(Borders borders){
+        this.borders = borders;
     }
 
     public void placeAnimal(Animal animal) {
@@ -55,6 +59,10 @@ public class WorldMap{
         }
     }
 
+    public Vector2d getMapSize(){
+        return mapSize;
+    }
+
     public int animalsOnPlace(Vector2d position) {
         if (animals.get(position) != null) {
             return animals.get(position).size();
@@ -67,12 +75,16 @@ public class WorldMap{
         return (position.follows(new Vector2d(0,0)) && position.precedes(mapSize));
     }
 
-    public Animal getAnimalOnPosition(Vector2d position){
-        return animals.get(position).get(0);
+    public List<Animal> getAnimalsOnPosition(Vector2d position){
+        return animals.get(position);
     }
 
     public Grass getGrassOnPosition(Vector2d position){
         return field.grassAtPosition(position);
+    }
+
+    public void eatGrass(Vector2d eatenPosition){
+        field.eatGrass(eatenPosition);
     }
 
     public Boundary getCurrentBounds(){

@@ -48,6 +48,6 @@ public class World {
         //engine.runAsync();
         System.out.println("system zakonczyl dzialanie");
         */
-        Application.launch(SimulationApp.class, arg);
+        //Application.launch(SimulationApp.class, arg);
     }
 }
