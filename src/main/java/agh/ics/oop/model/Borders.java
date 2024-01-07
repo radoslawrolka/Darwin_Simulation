@@ -10,5 +10,5 @@ public interface Borders<P> {
      *            The direction of the move.
      * @return The final position after moving in the given direction.
      */
-    P getPosition(P position, P UnitVector);
+    P getPosition(P position, MapDirection orientation);
 }
