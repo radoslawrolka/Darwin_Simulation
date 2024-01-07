@@ -33,6 +33,10 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
         }
     }
 
+    public Grass grassAtPosition(Vector2d position) {
+        return grasses.get(position);
+    }
+
     public void plantGrassAtRandomPosition(Collection<Vector2d> positions) {
         int randomIndex = ThreadLocalRandom.current().nextInt(positions.size());
         

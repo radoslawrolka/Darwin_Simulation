@@ -8,4 +8,6 @@ public interface GrassPlanter {
 
     void eatGrass(Vector2d eatenPositions);
 
+    Grass grassAtPosition(Vector2d position);
+
 }

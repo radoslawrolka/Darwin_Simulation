@@ -12,20 +12,22 @@ public class Globe implements Borders<Vector2d>{
     }
 
     @Override
-    public Vector2d getPosition(Vector2d position, MapDirection orientation) {
-        Vector2d newPosition = position.add(orientation.toUnitVector());
-        if (newPosition.follows(new Vector2d(0,0)) && newPosition.precedes(mapSize)){
+    public Vector2d getPosition(Vector2d position, Vector2d move) {
+        System.out.println(position.toString());
+        Vector2d newPosition = position.add(move);
+        System.out.println(newPosition.toString());
+        if (newPosition.follows(new Vector2d(0,0)) && newPosition.precedes(mapSize.subtract(new Vector2d(1,1)))){
             return newPosition;
         }
-        else if (newPosition.getX() < 0){
-            return new Vector2d(mapSize.getX()-1, newPosition.getY());
+
+        else if (newPosition.getY() < 0 || newPosition.getY() > mapSize.getY()-1){
+            return position;
         }
         else if (newPosition.getX() > mapSize.getX()){
             return new Vector2d(0, newPosition.getY());
         }
         else{
-            orientation.next(4);
-            return position;
+            return new Vector2d(mapSize.getX()-1, newPosition.getY());
         }
     }
 }
