@@ -1,12 +1,13 @@
 package agh.ics.oop.model;
 
+import java.util.HashSet;
+
 public class Statistics {
     private int children = 0;
-    private int descendants = 0;
-    private int daysAlive = 0;
     private int plantsEaten = 0;
-    private final int dayOfBirth;
     private int dayOfDeath = -1;
+    private final int dayOfBirth;
+    private final HashSet<Integer> descendantsSet = new HashSet<>();
     private Statistics parent1 = null;
     private Statistics parent2 = null;
 
@@ -18,30 +19,26 @@ public class Statistics {
         this.parent1 = parent1;
         this.parent2 = parent2;
         this.dayOfBirth = dayOfBirth;
-        this.parent1.addChild();
-        this.parent2.addChild();
-    }
-
-    public void addDay() {
-        this.daysAlive++;
+        this.parent1.addChild(this.hashCode());
+        this.parent2.addChild(this.hashCode());
     }
 
     public void addPlant() {
         this.plantsEaten++;
     }
 
-    private void addChild() {
+    private void addChild(int hashChild) {
         this.children++;
-        addDescendant();
+        addDescendant(hashChild);
     }
 
-    private void addDescendant() {
-        this.descendants++;
+    private void addDescendant(int hashDescendant) {
+        this.descendantsSet.add(hashDescendant);
         if (this.parent1 != null) {
-            this.parent1.addDescendant();
+            this.parent1.addDescendant(hashDescendant);
         }
         if (this.parent2 != null) {
-            this.parent2.addDescendant();
+            this.parent2.addDescendant(hashDescendant);
         }
     }
 
@@ -53,10 +50,7 @@ public class Statistics {
         return this.children;
     }
     public int getDescendants() {
-        return this.descendants;
-    }
-    public int getDaysAlive() {
-        return this.daysAlive;
+        return this.descendantsSet.size();
     }
     public int getPlantsEaten() {
         return this.plantsEaten;
