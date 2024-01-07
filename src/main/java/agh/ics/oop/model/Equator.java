@@ -8,19 +8,19 @@ public class Equator extends AbstractGrassPlanter {
         super(mapSize);
         this.lowerLeft = new Vector2d(0, lowerY);
         this.upperRight = new Vector2d(mapSize.getX(), upperY);
-        for (int i = 0; i <= mapSize.getX(); i++) {
-            for (int j = lowerY; j <= upperY; j++) {
+        for (int i = 0; i <mapSize.getX(); i++) {
+            for (int j = lowerY; j <=upperY; j++) {
                 preferable.put(new Vector2d(i, j), 0);
             }
         }
-        for(int i=0; i<= mapSize.getX(); i++){
+        for(int i=0; i<mapSize.getX(); i++){
             for(int j=0; j<lowerY; j++){
                 not_preferable.add(new Vector2d(i, j));
             }
         }
 
-        for(int i=0; i<= mapSize.getX(); i++){
-            for(int j=upperY+1; j<=mapSize.getY(); j++){
+        for(int i=0; i<mapSize.getX(); i++){
+            for(int j=upperY+1; j<mapSize.getY(); j++){
                 not_preferable.add(new Vector2d(i, j));
             }
         }
