@@ -4,10 +4,11 @@ import java.util.HashSet;
 
 public class Statistics {
     private int children = 0;
+    private int descendants = 0;
     private int plantsEaten = 0;
     private int dayOfDeath = -1;
     private final int dayOfBirth;
-    private final HashSet<Integer> descendantsSet = new HashSet<>();
+    private int lastDescendant = -1;
     private Statistics parent1 = null;
     private Statistics parent2 = null;
 
@@ -33,7 +34,11 @@ public class Statistics {
     }
 
     private void addDescendant(int hashDescendant) {
-        this.descendantsSet.add(hashDescendant);
+        if (this.lastDescendant == hashDescendant) {
+            return;
+        }
+        this.lastDescendant = hashDescendant;
+        this.descendants++;
         if (this.parent1 != null) {
             this.parent1.addDescendant(hashDescendant);
         }
@@ -50,7 +55,7 @@ public class Statistics {
         return this.children;
     }
     public int getDescendants() {
-        return this.descendantsSet.size();
+        return this.descendants;
     }
     public int getPlantsEaten() {
         return this.plantsEaten;
