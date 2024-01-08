@@ -10,14 +10,16 @@ public class WorldMap{
     private final Vector2d mapSize;
     private GrassPlanter field;
     private Borders borders;
+    private final int grassNumber;
 
     public WorldMap(Vector2d mapSize, int grassNumber){
         this.mapSize = mapSize;
-        field.plantGrass(grassNumber);
+        this.grassNumber = grassNumber;
     }
 
     public void addPlanter(GrassPlanter planter){
         this.field = planter;
+        field.plantGrass(grassNumber);
     }
 
     public void addBorders(Borders borders){
@@ -79,12 +81,19 @@ public class WorldMap{
         return animals.get(position);
     }
 
+    public Map<Vector2d, List<Animal>> getMap(){
+        return animals;
+    }
+
     public Grass getGrassOnPosition(Vector2d position){
         return field.grassAtPosition(position);
     }
 
     public void eatGrass(Vector2d eatenPosition){
         field.eatGrass(eatenPosition);
+    }
+    public void plantGrass(int grassNumber){
+        field.plantGrass(grassNumber);
     }
 
     public Boundary getCurrentBounds(){

@@ -13,6 +13,8 @@ public class Simulation{
     private final int BREED_ENERGY;
     private final int DAILY_LOST_OF_ENERGY;
 
+    private final MapChangeListener observer;
+
     private List<Animal> animals = new ArrayList<>();
     private AnimalBuilder animalBuilder;
 
@@ -36,7 +38,15 @@ public class Simulation{
             animals.add(animal);
             map.placeAnimal(animal);
         }
+        observer = new ConsoleMapDisplay();
 
+    }
+
+    public void run(){
+        while (animals.size() > 0){
+            dailyTask();
+            observer.mapChanged(map,"message");
+        }
     }
 
     public List<Vector2d> generateListOfPositions(Vector2d mapSize){
@@ -63,7 +73,8 @@ public class Simulation{
         dailyEnergyLost();
         moveAnimals();
         eatGrasses();
-
+        breedAnimals();
+        map.plantGrass(GRASS_DAILY_GROW);
     }
 
     public void dailyEnergyLost(){
@@ -83,17 +94,18 @@ public class Simulation{
     }
 
     public void eatGrasses(){
-        for(Animal animal : animals){
-            Vector2d position = animal.getPosition();
+        Map<Vector2d,List<Animal>> animalsOnMap = map.getMap();
+        for(Vector2d position : animalsOnMap.keySet()){
             Grass grass = map.getGrassOnPosition(position);
             if (grass != null){
                 if (map.animalsOnPlace(position) > 1){
-                    List<Animal> animalsOnPlace = map.getAnimalsOnPosition(position);
+                    List<Animal> animalsOnPlace = new ArrayList<>(animalsOnMap.get(position));
                     Animal animalToEat = conflict(animalsOnPlace);
                     animalToEat.changeEnergy(GRASS_ENERGY);
                     map.eatGrass(position);
                 }
                 else{
+                    Animal animal = animalsOnMap.get(position).get(0);
                     animal.changeEnergy(GRASS_ENERGY);
                     map.eatGrass(position);
                 }
@@ -102,23 +114,27 @@ public class Simulation{
     }
 
     public Animal conflict(List<Animal> animals){
-        Animal animaltoEat = null;
-        AnimalComparator comparator = new AnimalComparator();
-        for (int i=0; i<animals.size()-1; i++) {
-            int compare = comparator.compare(animals.get(i), animals.get(i + 1));
-            if (compare < 0) {
-                animaltoEat = animals.get(i + 1);
-            } else if (compare > 0) {
-                animaltoEat = animals.get(i);
-            } else {
-                animaltoEat = animals.get(ThreadLocalRandom.current().nextInt(2));
-            }
-        }
-        return animaltoEat;
+        animals.sort(new AnimalComparator());
+        return animals.get(0);
     }
 
     public void breedAnimals(){
-        for (Animal animal: animals){
+        Map<Vector2d,List<Animal>> animalsOnMap = map.getMap();
+        Animal animal1;
+        Animal animal2;
+        for (Vector2d position : animalsOnMap.keySet()){
+            if (animalsOnMap.get(position).size() <= 1){
+                continue;
+            }
+            List<Animal> copyList = new ArrayList<>(animalsOnMap.get(position));
+            animal1 = conflict(copyList);
+            copyList.remove(animal1);
+            animal2 = conflict(copyList);
+            if (animal1.getEnergy() >= BREED_ENERGY && animal2.getEnergy() >= BREED_ENERGY){
+                Animal child = animalBuilder.build(animal1, animal2);
+                animals.add(child);
+                map.placeAnimal(child);
+            }
         }
     }
 }
