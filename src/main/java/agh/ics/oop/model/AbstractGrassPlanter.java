@@ -59,4 +59,8 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
     }
 
     public abstract void eatGrass(Vector2d eatenPosition);
+
+    public int getGrassNumber() {
+        return grasses.size();
+    }
 }
