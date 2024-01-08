@@ -10,4 +10,6 @@ public interface GrassPlanter {
 
     Grass grassAtPosition(Vector2d position);
 
+    int getGrassNumber();
+
 }

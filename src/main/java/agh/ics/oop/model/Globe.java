@@ -13,9 +13,7 @@ public class Globe implements Borders<Vector2d>{
 
     @Override
     public Vector2d getPosition(Vector2d position, Vector2d move) {
-        System.out.println(position.toString());
         Vector2d newPosition = position.add(move);
-        System.out.println(newPosition.toString());
         if (newPosition.follows(new Vector2d(0,0)) && newPosition.precedes(mapSize.subtract(new Vector2d(1,1)))){
             return newPosition;
         }
