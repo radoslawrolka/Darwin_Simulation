@@ -1,8 +1,11 @@
 package agh.ics.oop.model;
 
 public class Jungle extends AbstractGrassPlanter {
+
+    private final int constraint;
     public Jungle(Vector2d mapSize) {
         super(mapSize);
+        constraint = (int) (mapSize.getX()*mapSize.getY()*0.23);
         for(int i=0; i<mapSize.getX(); i++){
             for(int j=0; j<mapSize.getY(); j++){
                 super.not_preferable.add(new Vector2d(i, j));
@@ -11,6 +14,9 @@ public class Jungle extends AbstractGrassPlanter {
     }
     @Override
     public void addPreferable(Vector2d position) {
+        if (preferable.size() > constraint) {
+            return;
+        }
         for (MapDirection direction : MapDirection.values()) {
             Vector2d newPosition = position.add(direction.toUnitVector());
             if (super.checkAvailability(newPosition) && !grasses.containsKey(newPosition)) {

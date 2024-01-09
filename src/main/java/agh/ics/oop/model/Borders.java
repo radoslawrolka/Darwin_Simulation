@@ -6,9 +6,9 @@ public interface Borders<P> {
      *
      * @param position
      *            The initial position.
-     * @param UnitVector
+     * @param unitVector
      *            The direction of the move.
      * @return The final position after moving in the given direction.
      */
-    P getPosition(P position, P UnitVector);
+    P getPosition(P position, P unitVector);
 }

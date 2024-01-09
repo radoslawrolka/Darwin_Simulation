@@ -5,88 +5,123 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
 
 public class WorldMap{
-    private final Map<Vector2d, Animal> animals = new HashMap<>();
-    private List<MapChangeListener> observers = new ArrayList<>();
-    private final HashMap<Vector2d,Grass> grasses = new HashMap<>();
-
+    private final Map<Vector2d, TreeSet<Animal>> animals = new HashMap<>();
+    private final List<MapChangeListener> observers = new ArrayList<>();
     private final Vector2d mapSize;
-    private int grassDailyGrowth;
-    private GrassGrow field;
+    private GrassPlanter field;
     private Borders borders;
+    private final int GRASS_ENERGY;
+    private final int BREED_ENERGY;
+    private Vector2d vec = new Vector2d(5,5);
 
-    public WorldMap(int grassDailyGrowth, Vector2d mapSize, GrassGrow field, Borders borders, int grassNumber) {
+    private final AnimalComparator comparator = new AnimalComparator();
+
+    protected WorldMap(Vector2d mapSize, int grassEnergy, int breedEnergy){
         this.mapSize = mapSize;
-        this.grassDailyGrowth = grassDailyGrowth;
-        this.field = field;
+        this.GRASS_ENERGY = grassEnergy;
+        this.BREED_ENERGY = breedEnergy;
+
+    }
+
+    protected void addPlanter(GrassPlanter planter, int grassNumber){ // Dodaje plantera i sadzi trawe
+        this.field = planter;
+        field.plantGrass(grassNumber);
+    }
+
+    protected void addBorders(Borders borders){ // Dodaje granice
         this.borders = borders;
-        field.plantGrass(grassNumber, grasses);
     }
 
-    public void setField(GrassGrow field){
-        this.field = field;
-    }
-
-    public void setBorders(Borders borders){
-        this.borders = borders;
-    }
-
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return objectAt(position) != null;
-    }
-
-    @Override
-    public boolean place(WorldElement object) {
-        try {
-            if (canMoveTo(object.getPosition())) {
-                if (object instanceof Animal) {
-                    animals.put(object.getPosition(), (Animal) object);
-                    notifyObservers("Dodano zwierze na pozycji " + object.getPosition());
-                }
-                return true;
-            }
-            else {
-                throw new PositionAlreadyOccupiedException(object.getPosition());
-            }
-
-        } catch (PositionAlreadyOccupiedException e) {
-            System.err.println("Błąd: " + e.getMessage());
-            return false;
+    public void placeAnimal(Animal animal) {  // Umieszcza zwierze na mapie (zwierze musi mieć juz przypisaną pozycje)
+        Vector2d position = animal.getPosition();
+        if (!animals.containsKey(position)){
+            TreeSet<Animal> animalsSet = new TreeSet<>(comparator.reversed());
+            animalsSet.add(animal);
+            animals.put(position, animalsSet);
+        }
+        else {
+            animals.get(position).add(animal);
         }
     }
 
-    @Override
-    public WorldElement objectAt(Vector2d position) {
+    public void moveAnimal(Animal animal) { // Przesuwa zwierze na mapie
+        Vector2d oldPosition = animal.getPosition();
+        animal.move(borders);
+        Vector2d newPosition = animal.getPosition();
+        if (getAnimalsOnPosition(oldPosition).size() == 1) {
+            animals.remove(oldPosition);
+        } else {
+            animals.get(oldPosition).remove(animal);
+        }
+        placeAnimal(animal);
+    }
+
+    public void removeAnimal(Animal animal) { // Usuwa zwierze z mapy
+        Vector2d position = animal.getPosition();
+        if (getAnimalsOnPosition(position).size() == 1) {
+            animals.remove(position);
+        } else {
+            animals.get(position).remove(animal);
+        }
+    }
+
+    public Vector2d getMapSize(){
+        return mapSize;
+    } // Zwraca rozmiar mapy
+
+    public void eatGrasses(){ // Dla wszystkich pozycji zwierząt znajdujących się na mapie najsilniejsze zwierze je trawe
+        for(Vector2d position : animals.keySet()){
+            System.out.println(position);
+            Grass grass = this.getGrassOnPosition(position);
+            if (grass != null){
+                Animal animalToEat = animals.get(position).first();
+                animalToEat.changeEnergy(GRASS_ENERGY);
+                field.eatGrass(position);
+            }
+        }
+    }
+
+    public List<Animal> breedAnimals(AnimalBuilder animalBuilder){ // Dla wszystkich pozycji zwierząt znajdujących się na mapie jeśli jest więcej niż jedno zwierze na pozycji to je rozmnaza z drugim najsilniejszym
+        List<Animal> children = new ArrayList<>();                 // Zwraca listę dzieci
+        for (Vector2d position : animals.keySet()){
+            if (animals.get(position).size() <= 1){
+                continue;
+            }
+            Animal animal1 = animals.get(position).first();
+            animals.get(position).remove(animal1);
+            Animal animal2 = animals.get(position).first();
+            animals.get(position).add(animal1);
+            if (animal1.getEnergy() >= BREED_ENERGY && animal2.getEnergy() >= BREED_ENERGY){
+                Animal child = animalBuilder.build(animal1, animal2);
+                placeAnimal(child);
+                children.add(child);
+            }
+        }
+        return children;
+    }
+
+    public TreeSet<Animal> getAnimalsOnPosition(Vector2d position){
         return animals.get(position);
+    } //Zwraca listę zwierząt na danej pozycji
+
+    public int getGrassNumber(){ // Zwraca liczbę traw na mapie
+        return field.getGrassNumber();
     }
 
-    @Override
-    public void move(WorldElement object, MapDirection direction) {
-        Vector2d oldPosition = object.getPosition();
-        if (object instanceof Animal) {
-            MapDirection oldOrientation =  ((Animal) object).getOrientation();
-            ((Animal) object).move(this);
-            Vector2d newPosition = object.getPosition();
-            if (oldPosition != newPosition) {
-                animals.remove(oldPosition);
-                animals.put(newPosition, (Animal) object);
-                notifyObservers("Zwierze przemiescilo sie z " + oldPosition + " na " + newPosition);
-            }
-            else if (oldOrientation != ((Animal) object).getOrientation()) {
-                notifyObservers("Zwierze zmienilo orientacje z " + oldOrientation + " na " + ((Animal) object).getOrientation() + " na pozycji " + object.getPosition());
-            }
-        }
+    public int getAvailableSpace(){ // Zwraca liczbę wolnych miejsc na mapie (zajęte liczy tylko przez zwierzęta, bo nie pisało doładnie)
+        return mapSize.getX() * mapSize.getY() - animals.size();
     }
 
-    @Override
-    public List<WorldElement> getElements() {
-        List<WorldElement> elements = new ArrayList<>(animals.values());
-        return elements;
+    public Grass getGrassOnPosition(Vector2d position){ // Zwraca trawe na danej pozycji (potrzebne do MapVisualizera)
+        return field.grassAtPosition(position);
+    }
+    public void plantGrass(int grassNumber){ // Sadzi podaną liczbę traw na mapie
+        field.plantGrass(grassNumber);
     }
 
     public Boundary getCurrentBounds(){
         return new Boundary(new Vector2d(0,0), mapSize);
-    }
+    } // Zwraca aktualne granice mapy ( potrzebne do MapVisualizera)
 
     @Override
     public String toString() {
@@ -103,12 +138,16 @@ public class WorldMap{
     }
 
     public void notifyObservers(String message) {
-        for (MapChangeListener observer : observers) {
+        for (MapChangeListener observer : observers){
             observer.mapChanged(this, message);
         }
     }
 
     public String getId() {
         return Integer.toString(this.hashCode());
+    }
+
+    public List<Vector2d> getPrefferredPositions() {
+        return field.getPrefferredPositions();
     }
 }

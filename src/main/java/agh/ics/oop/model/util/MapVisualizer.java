@@ -1,6 +1,10 @@
 package agh.ics.oop.model.util;
 
+import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.Grass;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.WorldMap;
+
 /**
  * The map visualizer converts the {@link WorldMap} map into a string
  * representation.
@@ -72,12 +76,13 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        if (this.map.isOccupied(currentPosition)) {
-            Object object = this.map.objectAt(currentPosition);
-            if (object != null) {
-                return object.toString();
-            }
+        if (this.map.animalsOnPlace(currentPosition) > 0) {
+            Animal animal = this.map.getAnimalsOnPosition(currentPosition).get(0);
+            return animal.toString();
         }
-        return EMPTY_CELL;
+        else {
+            Grass grass = this.map.getGrassOnPosition(currentPosition);
+            return (grass != null) ? grass.toString() : EMPTY_CELL;
+        }
     }
 }

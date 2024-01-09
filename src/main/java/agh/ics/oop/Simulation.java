@@ -2,45 +2,124 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class Simulation implements Runnable{
-    private final List<Animal> animals = new java.util.LinkedList<>();
-    private final List<MoveDirection> moves;
+public class Simulation{
+
     private final WorldMap map;
+    private final int GRASS_DAILY_GROW;
+    private final int DAILY_LOST_OF_ENERGY;
 
-    public Simulation(List<MoveDirection> moves, List<Vector2d> positions, WorldMap map) {
-        this.moves = moves;
+    private final MapChangeListener observer;
+
+    private List<Animal> animals = new ArrayList<>();
+    private AnimalBuilder animalBuilder;
+    private List<Animal> deadAnimals = new LinkedList<>();
+
+    public Simulation(WorldMap map, AnimalBuilder animalBuilder, MapChangeListener observer, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber){
+        GRASS_DAILY_GROW = grassDailyGrow;
+        DAILY_LOST_OF_ENERGY = dailyLostOfEnergy;
+        this.animalBuilder = animalBuilder;
         this.map = map;
-        for (Vector2d position : positions) {
-            Animal animal = new Animal(position);
-            if (map.place(animal)) {
-                this.animals.add(animal);
+        for(int k=0; k<startAnimalsNumber; k++){ //
+            int x = ThreadLocalRandom.current().nextInt(0, map.getMapSize().getX());
+            int y = ThreadLocalRandom.current().nextInt(0, map.getMapSize().getY());
+            Vector2d position = new Vector2d(x,y);
+            Animal animal = animalBuilder.spawn(position);
+            animals.add(animal);
+            System.out.println("Animal " + k + " position: " + position);
+            map.placeAnimal(animal);
+        }
+        this.observer = new ConsoleMapDisplay();
 
-            }
+    }
+
+    public void run(){
+        while (!animals.isEmpty()){
+            dailyTask();
+            observer.mapChanged(map,"message");
         }
     }
 
-    public List<Animal> getAnimals() {
-        return Collections.unmodifiableList(this.animals);
+    public void dailyTask(){
+        animalBuilder.incrementDay();
+        removeDead();
+        System.out.println("Animals number: " + animals.size());
+        moveAnimals();
+        map.eatGrasses();
+        breedAnimals();
+        map.plantGrass(GRASS_DAILY_GROW);
+        dailyEnergyLost();
     }
 
-    public List<MoveDirection> getMoves() {
-        return Collections.unmodifiableList(this.moves);
-    }
-
-    public void run() {
-        int i = 0;
-        for (MoveDirection move : this.moves) {
-            int index = i % this.animals.size();
-            map.move(this.animals.get(index), move);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            i++;
+    public void dailyEnergyLost(){
+        for(int i=0; i<animals.size(); i++){
+            animals.get(i).changeEnergy(-DAILY_LOST_OF_ENERGY);
         }
+    }
+
+    public void removeDead(){
+        for (int i=0; i<animals.size(); i++){
+            if (animals.get(i).getEnergy() <= 0){
+                map.removeAnimal(animals.get(i));
+                deadAnimals.add(animals.get(i));
+                animals.remove(i);
+                i--;
+            }
+        }
+    }
+    public void moveAnimals(){
+        for(Animal animal : animals){
+            map.moveAnimal(animal);
+        }
+    }
+
+    public void breedAnimals(){
+        List<Animal> children = map.breedAnimals(animalBuilder);
+        animals.addAll(children);
+    }
+
+    public int getAnimalsNumber(){ // Funkcje generujące wymagane statystyki
+        return animals.size();
+    }
+
+    public int getGrassNumber(){
+        return map.getGrassNumber();
+    }
+
+    public int getAvailableSpace(){
+        return map.getAvailableSpace();
+    }
+
+    public int getAnimalsAverageEnergy(){
+        int sum = 0;
+        for (Animal animal : animals){
+            sum += animal.getEnergy();
+        }
+        return sum/animals.size();
+    }
+
+    public int getAverageLifeLength(){
+        int sum = 0;
+        for (Animal animal : deadAnimals){
+            sum += animal.getStats().getDayOfDeath() - animal.getStats().getDayOfBirth();
+        }
+        return sum/deadAnimals.size();
+    }
+
+    public int getAverageChildrenNumber(){
+        int sum = 0;
+        for (Animal animal : deadAnimals){
+            sum += animal.getStats().getChildren();
+        }
+        for (Animal animal : animals){
+            sum += animal.getStats().getChildren();
+        }
+        return sum/(deadAnimals.size()+animals.size());
+    }
+
+    public List<Vector2d> getPrefferablePositions(){ // Preferowane pozycje traw do statystyk
+        return map.getPrefferredPositions();
     }
 }

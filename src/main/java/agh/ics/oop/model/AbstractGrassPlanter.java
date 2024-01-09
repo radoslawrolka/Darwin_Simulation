@@ -33,6 +33,10 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
         }
     }
 
+    public Grass grassAtPosition(Vector2d position) {
+        return grasses.get(position);
+    }
+
     public void plantGrassAtRandomPosition(Collection<Vector2d> positions) {
         int randomIndex = ThreadLocalRandom.current().nextInt(positions.size());
         
@@ -48,6 +52,14 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
         }
     }
 
+    public List<Vector2d> getPrefferredPositions() {
+        List<Vector2d> positions = new ArrayList<>();
+        for (Vector2d position : preferable.keySet()) {
+            positions.add(position);
+        }
+        return positions;
+    }
+
     public abstract void addPreferable(Vector2d position);
 
     public boolean checkAvailability(Vector2d position) {
@@ -55,4 +67,8 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
     }
 
     public abstract void eatGrass(Vector2d eatenPosition);
+
+    public int getGrassNumber() {
+        return grasses.size();
+    }
 }
