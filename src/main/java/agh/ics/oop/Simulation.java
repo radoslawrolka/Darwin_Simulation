@@ -118,4 +118,8 @@ public class Simulation{
         }
         return sum/(deadAnimals.size()+animals.size());
     }
+
+    public List<Vector2d> getPrefferablePositions(){ // Preferowane pozycje traw do statystyk
+        return map.getPrefferredPositions();
+    }
 }

@@ -52,6 +52,14 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
         }
     }
 
+    public List<Vector2d> getPrefferredPositions() {
+        List<Vector2d> positions = new ArrayList<>();
+        for (Vector2d position : preferable.keySet()) {
+            positions.add(position);
+        }
+        return positions;
+    }
+
     public abstract void addPreferable(Vector2d position);
 
     public boolean checkAvailability(Vector2d position) {
