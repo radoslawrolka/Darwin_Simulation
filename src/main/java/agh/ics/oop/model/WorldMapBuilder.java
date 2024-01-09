@@ -12,19 +12,19 @@ public class WorldMapBuilder {
         map.addPlanter(new Jungle(map.getMapSize()), grassStartNumber);
     }
 
-    public void buildEquator(int grassStartNumber, int lowerY, int upperY){
-        map.addPlanter(new Equator(map.getMapSize(),lowerY, upperY), grassStartNumber);
+    public void buildEquator(int grassStartNumber){
+        map.addPlanter(new Equator(map.getMapSize()), grassStartNumber);
     }
 
     public void buildGlobe(){
         map.addBorders(new Globe(map.getMapSize()));
     }
 
-    public WorldMap build(int grassPlanterType, int grassStartNumber, int lowerY, int upperY) {
+    public WorldMap build(int grassPlanterType, int grassStartNumber) {
         if (grassPlanterType == 1) {
             buildJungle(grassStartNumber);
         } else {
-            buildEquator(grassStartNumber, lowerY, upperY);
+            buildEquator(grassStartNumber);
         }
         buildGlobe();
         return map;
