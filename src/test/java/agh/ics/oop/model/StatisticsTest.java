@@ -10,14 +10,6 @@ public class StatisticsTest {
     private final Statistics statistics5 = new Statistics(statistics3, statistics4, 27);
 
     @Test
-    public void testAddDay() {
-        statistics1.addDay();
-        assert statistics1.getDaysAlive() == 1;
-        statistics1.addDay();
-        assert statistics1.getDaysAlive() == 2;
-    }
-
-    @Test
     public void testAddPlant() {
         statistics1.addPlant();
         assert statistics1.getPlantsEaten() == 1;

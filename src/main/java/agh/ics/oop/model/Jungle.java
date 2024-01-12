@@ -29,12 +29,10 @@ public class Jungle extends AbstractGrassPlanter {
     public void eatGrass(Vector2d eatenPosition) {
         grasses.remove(eatenPosition);
         int isPreferable = 0;
-        System.out.println(preferable.containsKey(new Vector2d(1,2)));
         for (MapDirection direction : MapDirection.values()) {
             Vector2d newPosition = eatenPosition.add(direction.toUnitVector());
             if (super.checkAvailability(newPosition)) {
                 if (!grasses.containsKey(newPosition)) {
-                    System.out.println(newPosition.toString());
                     preferable.compute(newPosition, (key, value) -> (value > 1) ? value - 1 : null);
                     if (preferable.get(newPosition) == null) {
                         not_preferable.add(newPosition);
