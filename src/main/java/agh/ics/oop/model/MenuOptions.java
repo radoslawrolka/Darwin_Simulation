@@ -7,6 +7,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
@@ -183,6 +184,42 @@ public class MenuOptions implements Initializable{
             return false;
         }
         return true;
+    }
+
+    @FXML
+    private void onClickLoadConfig() {
+        String fileName = loadConfigList.getValue();
+        if (fileName != null && !fileName.isEmpty()) {
+            ConfigLoader configLoader = new ConfigLoader();
+            ConfigData configData = null;
+            try {
+                configData = configLoader.loadFromCsv(fileName);
+            }
+            catch (IOException e) {
+                showInvalidDataAlert("Error loading config.");
+            }
+
+            if (configData != null) {
+                System.out.println("1");
+                mapHeightTextField.setText(String.valueOf(configData.mapHeight()));
+                mapWidthTextField.setText(String.valueOf(configData.mapWidth()));
+                initialPlantCountTextField.setText(String.valueOf(configData.initialPlantCount()));
+                energyPerPlantTextField.setText(String.valueOf(configData.energyPerPlant()));
+                dailyPlantGrowthTextField.setText(String.valueOf(configData.dailyPlantGrowth()));
+                plantGrowthVariantChoiceBox.setValue(configData.plantGrowthVariant().toString());
+                initialAnimalCountTextField.setText(String.valueOf(configData.initialAnimalCount()));
+                initialAnimalEnergyTextField.setText(String.valueOf(configData.initialAnimalEnergy()));
+                energyForMatingTextField.setText(String.valueOf(configData.energyForMating()));
+                breededAnimalEnergyTextField.setText(String.valueOf(configData.breededAnimalEnergy()));
+                minMutationsTextField.setText(String.valueOf(configData.minMutations()));
+                maxMutationsTextField.setText(String.valueOf(configData.maxMutations()));
+                genomeLengthTextField.setText(String.valueOf(configData.genomeLength()));
+                animalBehaviourVariantChoiceBox.setValue(configData.animalBehaviourVariant().toString());
+            }
+        }
+        else {
+            showInvalidDataAlert("Please select a config to load.");
+        }
     }
 
     @FXML

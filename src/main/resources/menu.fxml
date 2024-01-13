@@ -75,7 +75,7 @@
     <Button text="Save Configuration" onAction="#onClickSaveConfig" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
     <TextField fx:id="saveConfig" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-    <Button text="Load Configuration" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <Button text="Load Configuration" onAction="#onClickLoadConfig" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
     <ChoiceBox fx:id="loadConfigList" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
     <!-- Play Button -->
