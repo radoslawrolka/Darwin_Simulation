@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="agh.ics.oop.model.ConfigLoader" alignment="center" hgap="10" vgap="10">
+    <Button text="Save Configuration" onAction="#onClickSaveConfig" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <TextField fx:id="saveConfig" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+    <Button text="Load Configuration" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <ChoiceBox fx:id="loadConfigList" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+</GridPane>
