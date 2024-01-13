@@ -15,7 +15,7 @@ public class AnimalBuilder {
         this.genotypeLength = genotypeLength;
         this.MAX_ENERGY = MAX_ENERGY;
         this.START_ENERGY = START_ENERGY;
-        if (genotype == GenotypeEnum.NORMAL) {
+        if (genotype == GenotypeEnum.Normal) {
             genotypeConstructorSpawner = Genotype::new;
             genotypeConstructorBreeder = (genes1, genes2) -> (energy1, energy2) -> new Genotype(genes1, genes2, energy1, energy2);
         } else {

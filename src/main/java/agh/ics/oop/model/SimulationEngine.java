@@ -23,14 +23,6 @@ public class SimulationEngine {
         }
     }
 
-    public void runAsync() {
-        for (Simulation simulation : simulations) {
-            Thread thread = new Thread(simulation);
-            threads.add(thread);
-            thread.start();
-        }
-        awaitSimulationsEnd(false);
-    }
 
     public void awaitSimulationsEnd(boolean ifexecutor) {
         if (!ifexecutor) {
@@ -57,11 +49,5 @@ public class SimulationEngine {
         }
     }
 
-    public void runAsyncInThreadPool() {
-        for (Simulation simulation : simulations) {
-            executor.execute(simulation);
-        }
-        executor.shutdown();
-        awaitSimulationsEnd(true);
-    }
+
 }
