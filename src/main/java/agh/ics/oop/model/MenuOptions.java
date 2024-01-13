@@ -2,11 +2,9 @@ package agh.ics.oop.model;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
@@ -65,7 +63,7 @@ public class MenuOptions implements Initializable{
     private int genomeLength;
     private GenotypeEnum animalBehaviourVariant;
 
-    private ConfigSaver configSaver = new ConfigSaver();
+    private final ConfigSaver configSaver = new ConfigSaver();
 
     @Override
     public void initialize (URL location, ResourceBundle resources) {
