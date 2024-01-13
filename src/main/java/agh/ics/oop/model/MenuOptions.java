@@ -1,0 +1,196 @@
+package agh.ics.oop.model;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.ResourceBundle;
+
+public class MenuOptions implements Initializable{
+    @FXML
+    private TextField mapHeightTextField;
+    @FXML
+    private TextField mapWidthTextField;
+
+    @FXML
+    private TextField initialPlantCountTextField;
+    @FXML
+    private TextField energyPerPlantTextField;
+    @FXML
+    private TextField dailyPlantGrowthTextField;
+    @FXML
+    private ChoiceBox<String> plantGrowthVariantChoiceBox;
+
+    @FXML
+    private TextField initialAnimalCountTextField;
+    @FXML
+    private TextField initialAnimalEnergyTextField;
+    @FXML
+    private TextField energyForMatingTextField;
+    @FXML
+    private TextField breededAnimalEnergyTextField;
+    @FXML
+    private TextField minMutationsTextField;
+    @FXML
+    private TextField maxMutationsTextField;
+    @FXML
+    private TextField genomeLengthTextField;
+    @FXML
+    private ChoiceBox<String> animalBehaviourVariantChoiceBox;
+
+    @FXML
+    private ChoiceBox<String> loadConfigList;
+    @FXML
+    private TextField saveConfig;
+
+    private int mapHeight;
+    private int mapWidth;
+    private int initialPlantCount;
+    private int energyPerPlant;
+    private int dailyPlantGrowth;
+    private GrassPlanterEnum plantGrowthVariant;
+    private int initialAnimalCount;
+    private int initialAnimalEnergy;
+    private int energyForMating;
+    private int breededAnimalEnergy;
+    private int minMutations;
+    private int maxMutations;
+    private int genomeLength;
+    private GenotypeEnum animalBehaviourVariant;
+
+    private ConfigSaver configSaver = new ConfigSaver();
+
+    @Override
+    public void initialize (URL location, ResourceBundle resources) {
+        loadConfigList();
+    }
+
+    private void loadConfigList () {
+        loadConfigList.getItems().clear();
+        File configDirectory = Paths.get("src", "main", "resources", "config").toFile();
+        if (configDirectory.exists() && configDirectory.isDirectory()) {
+            File[] files = configDirectory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String fileNameWithoutExtension = removeFileExtension(file.getName());
+                    loadConfigList.getItems().add(fileNameWithoutExtension);
+                }
+            }
+        }
+    }
+
+
+
+    private String removeFileExtension (String fileName) {
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            return fileName.substring(0, lastDotIndex);
+        }
+        return fileName;
+    }
+
+    @FXML
+    private void onClickSaveConfig() {
+        String fileName = saveConfig.getText();
+        boolean isValidName = false;
+        if (fileName != null && !fileName.isEmpty()) {
+            isValidName = true;
+            for (String item : loadConfigList.getItems()) {
+                if (item.equals(fileName)) {
+                    isValidName = false;
+                    break;
+                }
+            }
+        }
+        if (isValidName && readData()) {
+            configSaver.saveToCsv(fileName,
+                                      this.mapHeight,
+                                      this.mapWidth,
+                                      this.initialPlantCount,
+                                      this.energyPerPlant,
+                                      this.dailyPlantGrowth,
+                                      this.plantGrowthVariant,
+                                      this.initialAnimalCount,
+                                      this.initialAnimalEnergy,
+                                      this.energyForMating,
+                                      this.breededAnimalEnergy,
+                                      this.minMutations,
+                                      this.maxMutations,
+                                      this.genomeLength,
+                                      this.animalBehaviourVariant);
+            loadConfigList();
+        }
+        else {
+            showInvalidDataAlert("Name is empty, or already exists.");
+        }
+    }
+
+    private boolean readData() {
+        try {
+            this.mapHeight = Integer.parseInt(mapHeightTextField.getText());
+            this.mapWidth = Integer.parseInt(mapWidthTextField.getText());
+            this.initialPlantCount = Integer.parseInt(initialPlantCountTextField.getText());
+            this.energyPerPlant = Integer.parseInt(energyPerPlantTextField.getText());
+            this.dailyPlantGrowth = Integer.parseInt(dailyPlantGrowthTextField.getText());
+            this.plantGrowthVariant = GrassPlanterEnum.valueOf(plantGrowthVariantChoiceBox.getValue());
+            this.initialAnimalCount = Integer.parseInt(initialAnimalCountTextField.getText());
+            this.initialAnimalEnergy = Integer.parseInt(initialAnimalEnergyTextField.getText());
+            this.energyForMating = Integer.parseInt(energyForMatingTextField.getText());
+            this.breededAnimalEnergy = Integer.parseInt(breededAnimalEnergyTextField.getText());
+            this.minMutations = Integer.parseInt(minMutationsTextField.getText());
+            this.maxMutations = Integer.parseInt(maxMutationsTextField.getText());
+            this.genomeLength = Integer.parseInt(genomeLengthTextField.getText());
+            this.animalBehaviourVariant = GenotypeEnum.valueOf(animalBehaviourVariantChoiceBox.getValue());
+        } catch (NumberFormatException | NullPointerException e) {
+            showInvalidDataAlert("Please enter valid numbers for all settings fields.");
+            return false;
+        }
+        return validateData();
+    }
+
+    private void showInvalidDataAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid Data");
+        alert.setHeaderText("Error in Input");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private boolean validateData() {
+        if (this.mapHeight <= 0 || this.mapWidth <= 0) {
+            showInvalidDataAlert("Map height and width must be positive integers.");
+            return false;
+        }
+        if (this.initialPlantCount < 0 || this.energyPerPlant < 0 || this.dailyPlantGrowth < 0) {
+            showInvalidDataAlert("Plant count, energy and growth must be non-negative integers.");
+            return false;
+        }
+        if (this.initialAnimalCount < 0 || this.initialAnimalEnergy < 0 || this.energyForMating < 0 || this.breededAnimalEnergy < 0) {
+            showInvalidDataAlert("Animal count, energy, energy for mating and breeded animal energy must be non-negative integers.");
+            return false;
+        }
+        if (this.minMutations < 0 || this.maxMutations < 0 || this.genomeLength < 0) {
+            showInvalidDataAlert("Min and max mutations and genome length must be non-negative integers.");
+            return false;
+        }
+        if (this.minMutations > this.maxMutations) {
+            showInvalidDataAlert("Min mutations must be less than or equal to max mutations.");
+            return false;
+        }
+        return true;
+    }
+
+    @FXML
+    public void onClickPlay() {
+        readData();
+        System.out.println("Play");
+    }
+
+}
