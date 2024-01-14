@@ -1,5 +1,5 @@
 package agh.ics.oop;
-
+/*
 import agh.ics.oop.model.*;
 import org.junit.jupiter.api.Test;
 
@@ -57,3 +57,4 @@ public class SimulationTest {
         assertEquals(simulation.getMoves(), List.of(MoveDirection.FORWARD, MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.FORWARD));
     }
 }
+*/

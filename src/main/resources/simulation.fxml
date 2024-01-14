@@ -1,25 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            minHeight="550.0" minWidth="850.0"
-            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
-    <center>
-        <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER"/>
-    </center>
-    <bottom>
-        <VBox spacing="10" alignment="CENTER">
-            <TextField fx:id="moveListTextField" promptText="Enter move list"/>
-            <Label fx:id="moveDescriptionLabel" text="Move description will be displayed here" textAlignment="CENTER"/>
-            <Button text="Start" onAction="#startSimulation"/>
-            <Button text="New Simulation" onAction="#newGame"/>
-        </VBox>
-    </bottom>
-</BorderPane>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" minHeight="600.0" minWidth="1100.0" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+    <VBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" maxWidth="300" maxHeight="500">
+        <LineChart fx:id="ChartAnimalsPlants" maxWidth="300" maxHeight="300" prefHeight="300" prefWidth="300">
+            <xAxis>
+                <NumberAxis side="BOTTOM" label="Day"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT" label="Number of animals/plants"/>
+            </yAxis>
+        </LineChart>
+        <LineChart fx:id="ChartEnergyLife" maxWidth="300" maxHeight="300">
+            <xAxis>
+                <NumberAxis side="BOTTOM" label="Day"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT" label="AVG energy to AVG age"/>
+            </yAxis>
+        </LineChart>
+    </VBox>
+    <VBox prefWidth="500" prefHeight="500" maxWidth="500" maxHeight="500" alignment="CENTER">
+    <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER" maxHeight="500" maxWidth="500" prefWidth="500" prefHeight="500"/>
+    </VBox>
+    <VBox maxHeight="500" maxWidth="200" alignment="CENTER" prefHeight="500" prefWidth="300">
+        <Label text="Simulation Statistics" alignment="CENTER" style="-fx-font-weight: bold;" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <GridPane alignment="CENTER" gridLinesVisible="true" GridPane.rowIndex="1" GridPane.columnIndex="2">
+            <Label text="Day:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label fx:id="dayLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Animal Count:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label fx:id="animalCountLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Plant Count:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Label fx:id="plantCountLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Label text="Average Animal Energy:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Label fx:id="averageAnimalEnergyLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <Label text="Average Animal Lifespan:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Label fx:id="averageAnimalLifespanLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <Label text="Average Children Count:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <Label fx:id="averageChildrenCountLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <Label text="Average Descendants Count:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <Label fx:id="averageDescendantsCountLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <Label text="Free Space:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+            <Label fx:id="freeSpaceLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+            <Label text="Occupied Space:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+            <Label fx:id="occupiedSpaceLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+        </GridPane>
+        <Label text="Followed Animal Statistics" GridPane.rowIndex="2" GridPane.columnIndex="2" alignment="CENTER" style="-fx-font-weight: bold;"/>
+        <GridPane alignment="CENTER" gridLinesVisible="true" GridPane.rowIndex="3" GridPane.columnIndex="2">
+            <Label text="Energy:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label fx:id="followedAnimalEnergyLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Birth Day:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label fx:id="followedAnimalBirthDayLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Death Day:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Label fx:id="followedAnimalDeathDayLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Label text="Children Count:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Label fx:id="followedAnimalChildrenCountLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <Label text="Descendants Count:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <Label fx:id="followedAnimalDescendantsCountLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <Label text="Genotype:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <Label fx:id="followedAnimalGenotypeLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <Label text="Active Gene Index:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+            <Label fx:id="followedAnimalActiveGeneIndexLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+            <Label text="Plants Eaten:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+            <Label fx:id="followedAnimalPlantsEatenLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+        </GridPane>
+
+    <Button text="Pause/Resume" GridPane.columnIndex="0" GridPane.rowIndex="10" onAction="#onClickPausePlay"/>
+    <Button text="Start" GridPane.columnIndex="2" GridPane.rowIndex="10" onAction="#onClickStart"/>
+    </VBox>
+</HBox>

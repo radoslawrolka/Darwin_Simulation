@@ -1,0 +1,2 @@
+mapHeight,mapWidth,initialPlantCount,energyPerPlant,dailyPlantGrowth,plantGrowthVariant,initialAnimalCount,initialAnimalEnergy,energyForMating,breededAnimalEnergy,energyLossPerDay,minMutations,maxMutations,genomeLength,animalBehaviourVariant,saveLogs,moveDelay
+10,10,1,1,1,Equator,10,10,1,1,1,1,1,1,Crazy,Yes,100

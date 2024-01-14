@@ -1,6 +1,5 @@
 package agh.ics.oop.model;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CrazyGenotype extends Genotype{
@@ -8,8 +7,8 @@ public class CrazyGenotype extends Genotype{
         super(length);
     }
 
-    public CrazyGenotype(Integer[] parent1, Integer[] parent2, Integer energy1, Integer energy2) {
-        super(parent1, parent2, energy1, energy2);
+    public CrazyGenotype(Integer[] parent1, Integer[] parent2, Integer energy1, Integer energy2, Integer min_mutation, Integer max_mutation) {
+        super(parent1, parent2, energy1, energy2, min_mutation, max_mutation);
     }
 
     @Override

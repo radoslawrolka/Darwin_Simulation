@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="agh.ics.oop.model.MenuOptions" alignment="center" hgap="10" vgap="10" minWidth="750" minHeight="650">
+    <!-- Map Settings -->
+    <Label text="Map Settings" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+
+    <Label text="Map Height:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="mapHeightTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <Label text="Map Width:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <TextField fx:id="mapWidthTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+    <!-- Plant Settings -->
+    <Label text="Plant Settings" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+
+    <Label text="Initial Plant Count:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    <TextField fx:id="initialPlantCountTextField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+    <Label text="Energy per Plant:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+    <TextField fx:id="energyPerPlantTextField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+    <Label text="Daily Plant Growth:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+    <TextField fx:id="dailyPlantGrowthTextField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+    <Label text="Plant Growth Variant:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+    <ChoiceBox fx:id="plantGrowthVariantChoiceBox" GridPane.columnIndex="1" GridPane.rowIndex="7">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Jungle" />
+                <String fx:value="Equator" />
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+    <!-- Animal Settings -->
+    <Label text="Animal Settings" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.columnSpan="2" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+
+    <Label text="Initial Animal Count:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+    <TextField fx:id="initialAnimalCountTextField" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+    <Label text="Initial Animal Energy:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+    <TextField fx:id="initialAnimalEnergyTextField" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+
+    <Label text="Energy for Mating:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+    <TextField fx:id="energyForMatingTextField" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+
+    <Label text="Breeded Animal Energy:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+    <TextField fx:id="breededAnimalEnergyTextField" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+
+    <Label text="Animal Energy Loss per Day:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
+    <TextField fx:id="energyLossPerDayTextField" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
+
+    <Label text="Min Mutations in Offspring:" GridPane.columnIndex="0" GridPane.rowIndex="14"/>
+    <TextField fx:id="minMutationsTextField" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
+
+    <Label text="Max Mutations in Offspring:" GridPane.columnIndex="0" GridPane.rowIndex="15"/>
+    <TextField fx:id="maxMutationsTextField" GridPane.columnIndex="1" GridPane.rowIndex="15"/>
+
+    <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
+    <TextField fx:id="genomeLengthTextField" GridPane.columnIndex="1" GridPane.rowIndex="16"/>
+
+    <Label text="Animal Behavior Variant:" GridPane.columnIndex="0" GridPane.rowIndex="17"/>
+    <ChoiceBox fx:id="animalBehaviourVariantChoiceBox" GridPane.columnIndex="1" GridPane.rowIndex="17">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Normal" />
+                <String fx:value="Crazy" />
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+    <!-- Configuration -->
+    <Label text="Configuration" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+
+    <Button text="Save Configuration" onAction="#onClickSaveConfig" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <TextField fx:id="saveConfig" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+    <Button text="Load Configuration" onAction="#onClickLoadConfig" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <ChoiceBox fx:id="loadConfigList" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+    <!-- SaveLog -->
+    <Label text="Other Settings" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+    <Label text="Save Logs to CSV" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.halignment="CENTER"/>
+    <ChoiceBox fx:id="saveLogsToCSV" GridPane.columnIndex="3" GridPane.rowIndex="4">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Yes" />
+                <String fx:value="No" />
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+    <Label text="Logs Name" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.halignment="CENTER"/>
+    <TextField fx:id="logsNameTextField" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+    <Label text="Move Delay" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.halignment="CENTER"/>
+    <TextField fx:id="moveDelayTextField" GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+    <!-- Play Button -->
+    <Button text="Play" onAction="#onClickPlay" GridPane.columnIndex="0" GridPane.rowIndex="18" GridPane.columnSpan="4" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+</GridPane>

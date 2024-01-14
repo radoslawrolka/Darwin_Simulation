@@ -63,7 +63,7 @@ public abstract class AbstractGrassPlanter implements GrassPlanter {
     public abstract void addPreferable(Vector2d position);
 
     public boolean checkAvailability(Vector2d position) {
-        return position.follows(new Vector2d(0, 0)) && position.precedes(mapSize);
+        return position.follows(new Vector2d(1, 1)) && position.precedes(mapSize);
     }
 
     public abstract void eatGrass(Vector2d eatenPosition);

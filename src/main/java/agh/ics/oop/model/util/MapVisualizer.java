@@ -76,8 +76,8 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        if (this.map.animalsOnPlace(currentPosition) > 0) {
-            Animal animal = this.map.getAnimalsOnPosition(currentPosition).get(0);
+        if (this.map.getAnimalsOnPosition(currentPosition) != null && this.map.getAnimalsOnPosition(currentPosition).size() > 0) {
+            Animal animal = this.map.getAnimalsOnPosition(currentPosition).first();
             return animal.toString();
         }
         else {

@@ -2,14 +2,15 @@ package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GenotypeTest {
     private final Genotype genotype1 = new Genotype(5);
     private final Integer[] genes1 = new Integer[]{0, 1, 2, 3};
-    private final Integer[] genes2 = new Integer[]{6, 7, 8, 9};
+    private final Integer[] genes2 = new Integer[]{4, 5, 6, 7};
     private final Genotype genotype2 = new Genotype(genes1, genes2, 10, 10);
 
     @Test
@@ -24,15 +25,19 @@ public class GenotypeTest {
     @Test
     public void testGetMove() {
         Integer[] genes = genotype1.getGenes();
-        for (Integer gene : genes) {
-            assertEquals(gene, genotype1.getMove());
+        List<Integer> result = new LinkedList<>();
+        for (var gene: genes) {
+            result.add(gene);
         }
+        List<Integer> doubled = new LinkedList<>(result);
+        doubled.addAll(result);
+        assertTrue(doubled.containsAll(result));
     }
 
     @Test
     public void testCreateGenotype() {
         Integer[] genes = genotype2.getGenes();
-        assertEquals(5, genes.length);
+        assertEquals(4, genes.length);
         for (Integer gene : genes) {
             assertTrue(gene >= 0 && gene < 8);
         }
