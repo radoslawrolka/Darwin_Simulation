@@ -1,10 +1,14 @@
 package agh.ics.oop.model;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +40,8 @@ public class MenuOptions implements Initializable{
     @FXML
     private TextField breededAnimalEnergyTextField;
     @FXML
+    private TextField energyLossPerDayTextField;
+    @FXML
     private TextField minMutationsTextField;
     @FXML
     private TextField maxMutationsTextField;
@@ -49,6 +55,9 @@ public class MenuOptions implements Initializable{
     @FXML
     private TextField saveConfig;
 
+    @FXML
+    private ChoiceBox<String> saveLogsToCSV;
+
     private int mapHeight;
     private int mapWidth;
     private int initialPlantCount;
@@ -59,10 +68,12 @@ public class MenuOptions implements Initializable{
     private int initialAnimalEnergy;
     private int energyForMating;
     private int breededAnimalEnergy;
+    private int energyLossPerDay;
     private int minMutations;
     private int maxMutations;
     private int genomeLength;
     private GenotypeEnum animalBehaviourVariant;
+    private String saveLogs;
 
     private final ConfigSaver configSaver = new ConfigSaver();
 
@@ -108,23 +119,27 @@ public class MenuOptions implements Initializable{
                 }
             }
         }
-        if (isValidName && readData()) {
-            configSaver.saveToCsv(fileName,
-                                      this.mapHeight,
-                                      this.mapWidth,
-                                      this.initialPlantCount,
-                                      this.energyPerPlant,
-                                      this.dailyPlantGrowth,
-                                      this.plantGrowthVariant,
-                                      this.initialAnimalCount,
-                                      this.initialAnimalEnergy,
-                                      this.energyForMating,
-                                      this.breededAnimalEnergy,
-                                      this.minMutations,
-                                      this.maxMutations,
-                                      this.genomeLength,
-                                      this.animalBehaviourVariant);
-            loadConfigList();
+        if (isValidName) {
+            if (readData()) {
+                configSaver.saveToCsv(fileName,
+                        this.mapHeight,
+                        this.mapWidth,
+                        this.initialPlantCount,
+                        this.energyPerPlant,
+                        this.dailyPlantGrowth,
+                        this.plantGrowthVariant,
+                        this.initialAnimalCount,
+                        this.initialAnimalEnergy,
+                        this.energyForMating,
+                        this.breededAnimalEnergy,
+                        this.energyLossPerDay,
+                        this.minMutations,
+                        this.maxMutations,
+                        this.genomeLength,
+                        this.animalBehaviourVariant,
+                        this.saveLogs);
+                loadConfigList();
+            }
         }
         else {
             showInvalidDataAlert("Name is empty, or already exists.");
@@ -143,10 +158,12 @@ public class MenuOptions implements Initializable{
             this.initialAnimalEnergy = Integer.parseInt(initialAnimalEnergyTextField.getText());
             this.energyForMating = Integer.parseInt(energyForMatingTextField.getText());
             this.breededAnimalEnergy = Integer.parseInt(breededAnimalEnergyTextField.getText());
+            this.energyLossPerDay = Integer.parseInt(energyLossPerDayTextField.getText());
             this.minMutations = Integer.parseInt(minMutationsTextField.getText());
             this.maxMutations = Integer.parseInt(maxMutationsTextField.getText());
             this.genomeLength = Integer.parseInt(genomeLengthTextField.getText());
             this.animalBehaviourVariant = GenotypeEnum.valueOf(animalBehaviourVariantChoiceBox.getValue());
+            this.saveLogs = saveLogsToCSV.getValue();
         } catch (NumberFormatException | NullPointerException e) {
             showInvalidDataAlert("Please enter valid numbers for all settings fields.");
             return false;
@@ -171,8 +188,8 @@ public class MenuOptions implements Initializable{
             showInvalidDataAlert("Plant count, energy and growth must be non-negative integers.");
             return false;
         }
-        if (this.initialAnimalCount < 0 || this.initialAnimalEnergy < 0 || this.energyForMating < 0 || this.breededAnimalEnergy < 0) {
-            showInvalidDataAlert("Animal count, energy, energy for mating and breeded animal energy must be non-negative integers.");
+        if (this.initialAnimalCount < 0 || this.initialAnimalEnergy < 0 || this.energyForMating < 0 || this.breededAnimalEnergy < 0 || this.energyLossPerDay < 0) {
+            showInvalidDataAlert("Animal count, energy, energy for mating, breeded animal energy and energy loss per day must be non-negative integers.");
             return false;
         }
         if (this.minMutations < 0 || this.maxMutations < 0 || this.genomeLength < 0) {
@@ -200,7 +217,6 @@ public class MenuOptions implements Initializable{
             }
 
             if (configData != null) {
-                System.out.println("1");
                 mapHeightTextField.setText(String.valueOf(configData.mapHeight()));
                 mapWidthTextField.setText(String.valueOf(configData.mapWidth()));
                 initialPlantCountTextField.setText(String.valueOf(configData.initialPlantCount()));
@@ -211,10 +227,12 @@ public class MenuOptions implements Initializable{
                 initialAnimalEnergyTextField.setText(String.valueOf(configData.initialAnimalEnergy()));
                 energyForMatingTextField.setText(String.valueOf(configData.energyForMating()));
                 breededAnimalEnergyTextField.setText(String.valueOf(configData.breededAnimalEnergy()));
+                energyLossPerDayTextField.setText(String.valueOf(configData.energyLossPerDay()));
                 minMutationsTextField.setText(String.valueOf(configData.minMutations()));
                 maxMutationsTextField.setText(String.valueOf(configData.maxMutations()));
                 genomeLengthTextField.setText(String.valueOf(configData.genomeLength()));
                 animalBehaviourVariantChoiceBox.setValue(configData.animalBehaviourVariant().toString());
+                saveLogsToCSV.setValue(configData.saveLogs());
             }
         }
         else {
@@ -222,10 +240,24 @@ public class MenuOptions implements Initializable{
         }
     }
 
+    private void openSimulationWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
+            Parent root = loader.load();
+            Stage simulationStage = new Stage();
+            simulationStage.setTitle("Simulation Window");
+            simulationStage.setScene(new Scene(root));
+            simulationStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void onClickPlay() {
         readData();
-        System.out.println("Play");
+        openSimulationWindow();
+
     }
 
 }

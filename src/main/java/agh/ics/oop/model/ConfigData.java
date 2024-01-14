@@ -11,8 +11,10 @@ public record ConfigData(
         int initialAnimalEnergy,
         int energyForMating,
         int breededAnimalEnergy,
+        int energyLossPerDay,
         int minMutations,
         int maxMutations,
         int genomeLength,
-        GenotypeEnum animalBehaviourVariant) {
+        GenotypeEnum animalBehaviourVariant,
+        String saveLogs) {
 }

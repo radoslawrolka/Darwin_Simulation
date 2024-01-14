@@ -51,17 +51,20 @@
     <Label text="Breeded Animal Energy:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
     <TextField fx:id="breededAnimalEnergyTextField" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
 
-    <Label text="Min Mutations in Offspring:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
-    <TextField fx:id="minMutationsTextField" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
+    <Label text="Animal Energy Loss per Day:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
+    <TextField fx:id="energyLossPerDayTextField" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
 
-    <Label text="Max Mutations in Offspring:" GridPane.columnIndex="0" GridPane.rowIndex="14"/>
-    <TextField fx:id="maxMutationsTextField" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
+    <Label text="Min Mutations in Offspring:" GridPane.columnIndex="0" GridPane.rowIndex="14"/>
+    <TextField fx:id="minMutationsTextField" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
 
-    <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="15"/>
-    <TextField fx:id="genomeLengthTextField" GridPane.columnIndex="1" GridPane.rowIndex="15"/>
+    <Label text="Max Mutations in Offspring:" GridPane.columnIndex="0" GridPane.rowIndex="15"/>
+    <TextField fx:id="maxMutationsTextField" GridPane.columnIndex="1" GridPane.rowIndex="15"/>
 
-    <Label text="Animal Behavior Variant:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
-    <ChoiceBox fx:id="animalBehaviourVariantChoiceBox" GridPane.columnIndex="1" GridPane.rowIndex="16">
+    <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
+    <TextField fx:id="genomeLengthTextField" GridPane.columnIndex="1" GridPane.rowIndex="16"/>
+
+    <Label text="Animal Behavior Variant:" GridPane.columnIndex="0" GridPane.rowIndex="17"/>
+    <ChoiceBox fx:id="animalBehaviourVariantChoiceBox" GridPane.columnIndex="1" GridPane.rowIndex="17">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="Normal" />
@@ -78,6 +81,17 @@
     <Button text="Load Configuration" onAction="#onClickLoadConfig" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
     <ChoiceBox fx:id="loadConfigList" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
+    <!-- SaveLog -->
+    <Label text="Other Settings" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+    <Label text="Save Logs to CSV" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.halignment="CENTER"/>
+    <ChoiceBox fx:id="saveLogsToCSV" GridPane.columnIndex="3" GridPane.rowIndex="4">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Yes" />
+                <String fx:value="No" />
+            </FXCollections>
+        </items>
+    </ChoiceBox>
     <!-- Play Button -->
-    <Button text="Play" onAction="#onClickPlay" GridPane.columnIndex="0" GridPane.rowIndex="17" GridPane.columnSpan="4" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
+    <Button text="Play" onAction="#onClickPlay" GridPane.columnIndex="0" GridPane.rowIndex="18" GridPane.columnSpan="4" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
 </GridPane>

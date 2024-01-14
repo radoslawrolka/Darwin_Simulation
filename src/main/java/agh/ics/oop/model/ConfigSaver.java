@@ -18,10 +18,12 @@ public class ConfigSaver {
             int initialAnimalEnergy,
             int energyForMating,
             int breededAnimalEnergy,
+            int energyLossPerDay,
             int minMutations,
             int maxMutations,
             int genomeLength,
-            GenotypeEnum animalBehaviourVariant) {
+            GenotypeEnum animalBehaviourVariant,
+            String saveLogs) {
 
         String csvFileName = "src/main/resources/config/" + FileName + ".csv";
 
@@ -29,14 +31,14 @@ public class ConfigSaver {
             // Writing the header
             writer.write("mapHeight,mapWidth,initialPlantCount,energyPerPlant,dailyPlantGrowth," +
                     "plantGrowthVariant,initialAnimalCount,initialAnimalEnergy,energyForMating," +
-                    "breededAnimalEnergy,minMutations,maxMutations,genomeLength,animalBehaviourVariant\n");
+                    "breededAnimalEnergy,energyLossPerDay,minMutations,maxMutations,genomeLength,animalBehaviourVariant,saveLogs\n");
 
             // Writing the data
-            writer.write(String.format("%d,%d,%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%s\n",
+            writer.write(String.format("%d,%d,%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%s,%s\n",
                     mapHeight, mapWidth, initialPlantCount, energyPerPlant, dailyPlantGrowth,
                     plantGrowthVariant.toString(), initialAnimalCount, initialAnimalEnergy,
-                    energyForMating, breededAnimalEnergy, minMutations, maxMutations, genomeLength,
-                    animalBehaviourVariant.toString()));
+                    energyForMating, breededAnimalEnergy, energyLossPerDay, minMutations, maxMutations, genomeLength,
+                    animalBehaviourVariant.toString(), saveLogs));
         } catch (IOException e) {
             System.err.println("Error saving CSV file: " + e.getMessage());
         }
