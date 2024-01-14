@@ -11,7 +11,10 @@ public class Simulation implements Runnable {
     private final int GRASS_DAILY_GROW;
     private final int DAILY_LOST_OF_ENERGY;
     private final int MOVE_DELAY;
-    private final MapChangeListener observer;
+    private MapChangeListener observer;
+    private boolean breakSimulation = false;
+    private final Object pauseLock = new Object();
+    private boolean isPaused = false;
 
     private List<Animal> animals = new ArrayList<>();
     private AnimalBuilder animalBuilder;
@@ -32,15 +35,59 @@ public class Simulation implements Runnable {
             System.out.println("Animal " + k + " position: " + position);
             map.placeAnimal(animal);
         }
-        this.observer = new ConsoleMapDisplay();
 
     }
 
     public void run(){
         while (!animals.isEmpty()){
+            if (breakSimulation) break;
+            synchronized (pauseLock) {
+                while (isPaused) {
+                    try {
+                        pauseLock.wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+            }
+
+            try {
+                Thread.sleep(MOVE_DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(MOVE_DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             dailyTask();
             observer.mapChanged(map,"message");
         }
+    }
+
+    public void pauseSimulation() {
+        isPaused = true;
+    }
+
+    public void resumeSimulation() {
+        isPaused = false;
+        synchronized (pauseLock) {
+            pauseLock.notify();
+        }
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void breakSimulation(){
+        breakSimulation = true;
+    }
+
+    public void setObserver(MapChangeListener observer){
+        this.observer = observer;
     }
 
     public void dailyTask(){
