@@ -16,5 +16,6 @@ public record ConfigData(
         int maxMutations,
         int genomeLength,
         GenotypeEnum animalBehaviourVariant,
-        String saveLogs) {
+        String saveLogs,
+        int moveDelay) {
 }

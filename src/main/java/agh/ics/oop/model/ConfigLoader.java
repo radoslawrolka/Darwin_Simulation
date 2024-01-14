@@ -28,7 +28,8 @@ public class ConfigLoader {
                         Integer.parseInt(values[12]),
                         Integer.parseInt(values[13]),
                         GenotypeEnum.valueOf(values[14]),
-                        String.valueOf(values[15])
+                        String.valueOf(values[15]),
+                        Integer.parseInt(values[16])
                 );
             } else {
                 throw new IOException("CSV file is empty.");

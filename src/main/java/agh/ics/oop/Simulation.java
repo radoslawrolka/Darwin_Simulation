@@ -5,21 +5,22 @@ import agh.ics.oop.model.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Simulation{
+public class Simulation implements Runnable {
 
     private final WorldMap map;
     private final int GRASS_DAILY_GROW;
     private final int DAILY_LOST_OF_ENERGY;
-
+    private final int MOVE_DELAY;
     private final MapChangeListener observer;
 
     private List<Animal> animals = new ArrayList<>();
     private AnimalBuilder animalBuilder;
     private List<Animal> deadAnimals = new LinkedList<>();
 
-    public Simulation(WorldMap map, AnimalBuilder animalBuilder, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber, String SaveLogs){
+    public Simulation(WorldMap map, AnimalBuilder animalBuilder, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber, String SaveLogs, int moveDelay){
         GRASS_DAILY_GROW = grassDailyGrow;
         DAILY_LOST_OF_ENERGY = dailyLostOfEnergy;
+        MOVE_DELAY = moveDelay;
         this.animalBuilder = animalBuilder;
         this.map = map;
         for(int k=0; k<startAnimalsNumber; k++){ //

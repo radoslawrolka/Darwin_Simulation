@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.Simulation;
+import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MenuOptions implements Initializable{
     @FXML
@@ -57,6 +61,9 @@ public class MenuOptions implements Initializable{
 
     @FXML
     private ChoiceBox<String> saveLogsToCSV;
+    @FXML
+    private TextField moveDelayTextField;
+
 
     private int mapHeight;
     private int mapWidth;
@@ -74,8 +81,11 @@ public class MenuOptions implements Initializable{
     private int genomeLength;
     private GenotypeEnum animalBehaviourVariant;
     private String saveLogs;
+    private int moveDelay;
 
     private final ConfigSaver configSaver = new ConfigSaver();
+    private final ConfigLoader configLoader = new ConfigLoader();
+    private final WorldMapBuilder worldMapBuilder = new WorldMapBuilder();
 
     @Override
     public void initialize (URL location, ResourceBundle resources) {
@@ -137,7 +147,8 @@ public class MenuOptions implements Initializable{
                         this.maxMutations,
                         this.genomeLength,
                         this.animalBehaviourVariant,
-                        this.saveLogs);
+                        this.saveLogs,
+                        this.moveDelay);
                 loadConfigList();
             }
         }
@@ -164,6 +175,7 @@ public class MenuOptions implements Initializable{
             this.genomeLength = Integer.parseInt(genomeLengthTextField.getText());
             this.animalBehaviourVariant = GenotypeEnum.valueOf(animalBehaviourVariantChoiceBox.getValue());
             this.saveLogs = saveLogsToCSV.getValue();
+            this.moveDelay = Integer.parseInt(moveDelayTextField.getText());
         } catch (NumberFormatException | NullPointerException e) {
             showInvalidDataAlert("Please enter valid numbers for all settings fields.");
             return false;
@@ -200,6 +212,14 @@ public class MenuOptions implements Initializable{
             showInvalidDataAlert("Min mutations must be less than or equal to max mutations.");
             return false;
         }
+        if (this.saveLogs == null) {
+            showInvalidDataAlert("Please select whether to save logs.");
+            return false;
+        }
+        if (this.moveDelay < 0) {
+            showInvalidDataAlert("Move delay must be non-negative integer.");
+            return false;
+        }
         return true;
     }
 
@@ -233,6 +253,7 @@ public class MenuOptions implements Initializable{
                 genomeLengthTextField.setText(String.valueOf(configData.genomeLength()));
                 animalBehaviourVariantChoiceBox.setValue(configData.animalBehaviourVariant().toString());
                 saveLogsToCSV.setValue(configData.saveLogs());
+                moveDelayTextField.setText(String.valueOf(configData.moveDelay()));
             }
         }
         else {
@@ -240,24 +261,43 @@ public class MenuOptions implements Initializable{
         }
     }
 
-    private void openSimulationWindow() {
+    private SimulationPresenter openSimulationWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
             Parent root = loader.load();
+
+            SimulationPresenter simulationController = loader.getController();
+
             Stage simulationStage = new Stage();
             simulationStage.setTitle("Simulation Window");
             simulationStage.setScene(new Scene(root));
             simulationStage.show();
+            simulationStage.setOnCloseRequest(event -> onClose(simulationController, simulationStage));
+
+
+            return simulationController;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    @FXML
-    public void onClickPlay() {
-        readData();
-        openSimulationWindow();
-
+    private void onClose(SimulationPresenter simulationController, Stage simulationStage) {
+        if (simulationController != null) {
+            simulationController.stopSimulation();
+        }
+        simulationStage.close();
     }
 
+
+    @FXML
+    private void onClickPlay() {
+        if (readData()) {
+            WorldMap map = worldMapBuilder.build(this.mapWidth, this.mapHeight, this.initialPlantCount, this.energyPerPlant, this.dailyPlantGrowth, this.plantGrowthVariant, this.energyForMating);
+            AnimalBuilder animalBuilder = new AnimalBuilder(this.genomeLength, this.animalBehaviourVariant, this.breededAnimalEnergy, this.initialAnimalEnergy, this.minMutations, this.maxMutations);
+            Simulation simulation = new Simulation(map, animalBuilder, this.dailyPlantGrowth, this.energyLossPerDay, this.initialAnimalCount, this.saveLogs, this.moveDelay);
+            SimulationPresenter simulationController = openSimulationWindow();
+            simulationController.setDataFromMenu(map, simulation);
+        }
+    }
 }

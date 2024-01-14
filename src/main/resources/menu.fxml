@@ -92,6 +92,8 @@
             </FXCollections>
         </items>
     </ChoiceBox>
+    <Label text="Move Delay" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.halignment="CENTER"/>
+    <TextField fx:id="moveDelayTextField" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
     <!-- Play Button -->
     <Button text="Play" onAction="#onClickPlay" GridPane.columnIndex="0" GridPane.rowIndex="18" GridPane.columnSpan="4" GridPane.halignment="CENTER" style="-fx-font-weight: bold;"/>
 </GridPane>
