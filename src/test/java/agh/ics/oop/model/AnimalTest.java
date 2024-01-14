@@ -4,22 +4,18 @@ import org.junit.jupiter.api.Test;
 
 public class AnimalTest {
     int startEnergy = 10;
-    int maxEnergy = 20;
     int moveEnergy = 1;
     private final Animal animal1 = new Animal(new Vector2d(2, 2),
                                               new Genotype(6),
                                               new Statistics(7),
-                                              maxEnergy,
                                               startEnergy);
     private final Animal animal2 = new Animal(new Vector2d(2, 3),
                                               new Genotype(6),
                                               new Statistics(9),
-                                              maxEnergy,
                                               startEnergy);
     private final Animal animal3 = new Animal(new Vector2d(9,7),
                                               new Genotype(8),
                                               new Statistics(1),
-                                              maxEnergy,
                                               startEnergy);
 
     @Test
@@ -42,8 +38,9 @@ public class AnimalTest {
         assert animal1.getEnergy() == startEnergy - moveEnergy;
         animal1.changeEnergy(moveEnergy);
         assert animal1.getEnergy() == startEnergy;
-        animal2.changeEnergy(maxEnergy+4);
-        assert animal2.getEnergy() == maxEnergy;
+        int energy = animal2.getEnergy();
+        animal2.changeEnergy(4);
+        assert animal2.getEnergy() == energy +4;
     }
 
     @Test

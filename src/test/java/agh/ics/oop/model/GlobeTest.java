@@ -12,13 +12,13 @@ public class GlobeTest {
     @Test
     public void getPositionTest(){
         Globe globe = new Globe(mapSize);
-        Vector2d position = new Vector2d(8, 8);
+        Vector2d position = new Vector2d(9, 9);
         MapDirection orientation = MapDirection.NORTH;
-        assertEquals(new Vector2d(8, 9), globe.getPosition(position, orientation.toUnitVector()));
+        assertEquals(new Vector2d(9, 10), globe.getPosition(position, orientation.toUnitVector()));
         position = position.add(orientation.toUnitVector());
-        assertEquals(new Vector2d(8, 9), globe.getPosition(position, orientation.toUnitVector()));
-        Vector2d position2 = new Vector2d(0, 0);
-        assertEquals(new Vector2d(9, 0), globe.getPosition(position2, MapDirection.WEST.toUnitVector()));
-        assertEquals(new Vector2d(0, 0), globe.getPosition(position2, MapDirection.SOUTHEAST.toUnitVector()));
+        assertEquals(new Vector2d(9, 10), globe.getPosition(position, orientation.toUnitVector()));
+        Vector2d position2 = new Vector2d(1, 1);
+        assertEquals(new Vector2d(10, 1), globe.getPosition(position2, MapDirection.WEST.toUnitVector()));
+        assertEquals(new Vector2d(1, 1), globe.getPosition(position2, MapDirection.SOUTHEAST.toUnitVector()));
     }
 }

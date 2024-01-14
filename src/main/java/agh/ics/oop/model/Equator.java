@@ -8,7 +8,7 @@ public class Equator extends AbstractGrassPlanter {
         super(mapSize);
         int constraint = (int) (mapSize.getX()*mapSize.getY()*0.20);
         int sum = 0;
-        int medium = mapSize.getY()/2;
+        int medium = mapSize.getY()/2 +1;
         int diff = 1;
         int lowerY = medium;
         int upperY = medium;
@@ -34,7 +34,7 @@ public class Equator extends AbstractGrassPlanter {
         this.lowerLeft = new Vector2d(1, lowerY);
         this.upperRight = new Vector2d(mapSize.getX(), upperY);
         for(int i=1; i<=mapSize.getX(); i++){
-            for(int j=1; j<=lowerY; j++){
+            for(int j=1; j<lowerY; j++){
                 not_preferable.add(new Vector2d(i, j));
             }
         }

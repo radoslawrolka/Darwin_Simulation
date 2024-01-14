@@ -11,7 +11,7 @@ public class GenotypeTest {
     private final Genotype genotype1 = new Genotype(5);
     private final Integer[] genes1 = new Integer[]{0, 1, 2, 3};
     private final Integer[] genes2 = new Integer[]{4, 5, 6, 7};
-    private final Genotype genotype2 = new Genotype(genes1, genes2, 10, 10);
+    private final Genotype genotype2 = new Genotype(genes1, genes2, 20,30, 1,5);
 
     @Test
     public void testGetGenes() {
