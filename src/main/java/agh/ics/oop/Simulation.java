@@ -143,6 +143,7 @@ public class Simulation implements Runnable {
 
     public int getAnimalsAverageEnergy(){
         int sum = 0;
+        if (animals.isEmpty()) return 0;
         for (Animal animal : animals){
             sum += animal.getEnergy();
         }

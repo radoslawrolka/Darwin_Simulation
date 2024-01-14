@@ -74,7 +74,9 @@ public class WorldMap{
             if (grass != null){
                 Animal animalToEat = animals.get(position).first();
                 animalToEat.changeEnergy(GRASS_ENERGY);
+                animalToEat.getStats().addPlant();
                 field.eatGrass(position);
+
             }
         }
     }

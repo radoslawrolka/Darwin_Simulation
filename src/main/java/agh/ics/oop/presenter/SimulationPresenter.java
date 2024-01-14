@@ -109,6 +109,7 @@ public class SimulationPresenter implements MapChangeListener {
         mapHeight = yMax;
         width = 500/(mapWidth+1);
         height = 500/(mapHeight+1);
+
     }
 
     public void xyLabel(){
@@ -170,7 +171,6 @@ public class SimulationPresenter implements MapChangeListener {
         averageDescendantsCountLabel.setText(Integer.toString(simulation.getAverageDescendantNumber()));
         freeSpaceLabel.setText(Integer.toString(simulation.getAvailableSpace()));
         occupiedSpaceLabel.setText(Integer.toString(mapHeight*mapWidth - simulation.getAvailableSpace()));
-
     }
 
     private void followAnimal() {
@@ -187,6 +187,10 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
+    private void saveLog() {
+
+    }
+
     private void drawMap() {
         xyLabel();
         columnsFunction();
@@ -194,6 +198,7 @@ public class SimulationPresenter implements MapChangeListener {
         addElements();
         updateStats();
         followAnimal();
+        saveLog();
         mapGrid.setGridLinesVisible(true);
     }
 
