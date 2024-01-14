@@ -68,7 +68,7 @@ public class SimulationPresenter implements MapChangeListener {
     private int yMax;
     private  int mapWidth;
     private  int mapHeight;
-
+    private CsvDataWriter csvDataWriter;
     private int width;
     private int height;
     private Thread simulationThread;
@@ -96,7 +96,7 @@ public class SimulationPresenter implements MapChangeListener {
         ChartEnergyLife.getData().add(series2);
     }
 
-    public void setDataFromMenu(WorldMap map, Simulation simulation){
+    public void setDataFromMenu(WorldMap map, Simulation simulation, String logName) {
         this.map = map;
         this.simulation = simulation;
         simulation.setObserver(this);
@@ -109,7 +109,9 @@ public class SimulationPresenter implements MapChangeListener {
         mapHeight = yMax;
         width = 500/(mapWidth+1);
         height = 500/(mapHeight+1);
-
+        if (logName != null) {
+            csvDataWriter = new CsvDataWriter(logName);
+        }
     }
 
     public void xyLabel(){
@@ -188,6 +190,12 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void saveLog() {
+        if (csvDataWriter != null) {
+            csvDataWriter.appendData(simulation.getDay(), simulation.getAnimalsNumber(), simulation.getGrassNumber(),
+                    simulation.getAnimalsAverageEnergy(), simulation.getAverageLifeLength(),
+                    simulation.getAverageChildrenNumber(), simulation.getAverageDescendantNumber(),
+                    simulation.getAvailableSpace(), mapHeight*mapWidth - simulation.getAvailableSpace());
+        }
 
     }
 

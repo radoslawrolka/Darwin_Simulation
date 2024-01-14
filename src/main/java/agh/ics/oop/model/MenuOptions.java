@@ -59,6 +59,8 @@ public class MenuOptions implements Initializable{
     @FXML
     private ChoiceBox<String> saveLogsToCSV;
     @FXML
+    private TextField logsNameTextField;
+    @FXML
     private TextField moveDelayTextField;
 
 
@@ -78,6 +80,7 @@ public class MenuOptions implements Initializable{
     private int genomeLength;
     private GenotypeEnum animalBehaviourVariant;
     private String saveLogs;
+    private String LogsName;
     private int moveDelay;
 
     private final ConfigSaver configSaver = new ConfigSaver();
@@ -172,6 +175,7 @@ public class MenuOptions implements Initializable{
             this.genomeLength = Integer.parseInt(genomeLengthTextField.getText());
             this.animalBehaviourVariant = GenotypeEnum.valueOf(animalBehaviourVariantChoiceBox.getValue());
             this.saveLogs = saveLogsToCSV.getValue();
+            this.LogsName = logsNameTextField.getText();
             this.moveDelay = Integer.parseInt(moveDelayTextField.getText());
         } catch (NumberFormatException | NullPointerException e) {
             showInvalidDataAlert("Please enter valid numbers for all settings fields.");
@@ -186,6 +190,23 @@ public class MenuOptions implements Initializable{
         alert.setHeaderText("Error in Input");
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private boolean loadLogList (String fileName) {
+        File configDirectory = Paths.get("src", "main", "resources", "log").toFile();
+        if (configDirectory.exists() && configDirectory.isDirectory()) {
+            File[] files = configDirectory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String fileNameWithoutExtension = removeFileExtension(file.getName());
+                    if (fileNameWithoutExtension.equals(fileName)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     private boolean validateData() {
@@ -216,6 +237,19 @@ public class MenuOptions implements Initializable{
         if (this.moveDelay < 0) {
             showInvalidDataAlert("Move delay must be non-negative integer.");
             return false;
+        }
+        if (this.saveLogs.equals("Yes")) {
+            if (this.LogsName == null || this.LogsName.isEmpty()) {
+                showInvalidDataAlert("Please enter a name for the logs.");
+                return false;
+            }
+            if (!loadLogList(this.LogsName)) {
+                showInvalidDataAlert("Logs with this name already exist.");
+                return false;
+            }
+        }
+        else {
+            this.LogsName = null;
         }
         return true;
     }
@@ -270,8 +304,6 @@ public class MenuOptions implements Initializable{
             simulationStage.setScene(new Scene(root));
             simulationStage.show();
             simulationStage.setOnCloseRequest(event -> onClose(simulationController, simulationStage));
-
-
             return simulationController;
         } catch (Exception e) {
             e.printStackTrace();
@@ -292,9 +324,9 @@ public class MenuOptions implements Initializable{
         if (readData()) {
             WorldMap map = worldMapBuilder.build(this.mapWidth, this.mapHeight, this.initialPlantCount, this.energyPerPlant, this.dailyPlantGrowth, this.plantGrowthVariant, this.energyForMating);
             AnimalBuilder animalBuilder = new AnimalBuilder(this.genomeLength, this.animalBehaviourVariant, this.breededAnimalEnergy, this.initialAnimalEnergy, this.minMutations, this.maxMutations);
-            Simulation simulation = new Simulation(map, animalBuilder, this.dailyPlantGrowth, this.energyLossPerDay, this.initialAnimalCount, this.saveLogs, this.moveDelay);
+            Simulation simulation = new Simulation(map, animalBuilder, this.dailyPlantGrowth, this.energyLossPerDay, this.initialAnimalCount, this.moveDelay);
             SimulationPresenter simulationController = openSimulationWindow();
-            simulationController.setDataFromMenu(map, simulation);
+            simulationController.setDataFromMenu(map, simulation, this.LogsName);
         }
     }
 }

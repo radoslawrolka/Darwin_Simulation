@@ -21,7 +21,7 @@ public class Simulation implements Runnable {
     private AnimalBuilder animalBuilder;
     private List<Animal> deadAnimals = new LinkedList<>();
 
-    public Simulation(WorldMap map, AnimalBuilder animalBuilder, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber, String SaveLogs, int moveDelay){
+    public Simulation(WorldMap map, AnimalBuilder animalBuilder, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber, int moveDelay){
         GRASS_DAILY_GROW = grassDailyGrow;
         DAILY_LOST_OF_ENERGY = dailyLostOfEnergy;
         MOVE_DELAY = moveDelay;
