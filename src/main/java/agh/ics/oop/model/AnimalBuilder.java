@@ -5,22 +5,26 @@ import java.util.function.Function;
 
 public class AnimalBuilder {
     private final int genotypeLength;
-    private final int MAX_ENERGY;
     private final int START_ENERGY;
+    private final int BREED_ENERGY;
+    private final int MIN_MUTATION;
+    private final int MAX_MUTATION;
     private int day = 0;
     private final Function<Integer, Genotype> genotypeConstructorSpawner;
-    private final BiFunction<Integer[], Integer[], BiFunction<Integer, Integer, Genotype>> genotypeConstructorBreeder;
+    private final BiFunction<Integer[], Integer[], BiFunction<Integer, Integer, BiFunction<Integer, Integer, Genotype>>> genotypeConstructorBreeder;
 
-    public AnimalBuilder(int genotypeLength, GenotypeEnum genotype, int MAX_ENERGY, int START_ENERGY) {
+    public AnimalBuilder(int genotypeLength, GenotypeEnum genotype, int BREED_ENERGY, int START_ENERGY, int MIN_MUTATION, int MAX_MUTATION) {
         this.genotypeLength = genotypeLength;
-        this.MAX_ENERGY = MAX_ENERGY;
+        this.BREED_ENERGY = BREED_ENERGY;
         this.START_ENERGY = START_ENERGY;
+        this.MIN_MUTATION = MIN_MUTATION;
+        this.MAX_MUTATION = MAX_MUTATION;
         if (genotype == GenotypeEnum.Normal) {
             genotypeConstructorSpawner = Genotype::new;
-            genotypeConstructorBreeder = (genes1, genes2) -> (energy1, energy2) -> new Genotype(genes1, genes2, energy1, energy2);
+            genotypeConstructorBreeder = (genes1, genes2) -> (energy1, energy2) -> (minmut, maxmut) -> new Genotype(genes1, genes2, energy1, energy2, minmut, maxmut);
         } else {
             genotypeConstructorSpawner = CrazyGenotype::new;
-            genotypeConstructorBreeder = (genes1, genes2) -> (energy1, energy2) -> new CrazyGenotype(genes1, genes2, energy1, energy2);
+            genotypeConstructorBreeder = (genes1, genes2) -> (energy1, energy2) -> (minmut, maxmut) -> new CrazyGenotype(genes1, genes2, energy1, energy2, minmut, maxmut);
         }
     }
 
@@ -32,7 +36,6 @@ public class AnimalBuilder {
         return new Animal(initialPosition,
                           this.genotypeConstructorSpawner.apply(this.genotypeLength),
                           new Statistics(this.day),
-                          this.MAX_ENERGY,
                           this.START_ENERGY);
     }
 
@@ -41,9 +44,10 @@ public class AnimalBuilder {
                           this.genotypeConstructorBreeder.apply(parent1.getGenotype().getGenes(),
                                                                 parent2.getGenotype().getGenes())
                                                          .apply(parent1.getEnergy(),
-                                                                parent2.getEnergy()),
+                                                                parent2.getEnergy())
+                                                         .apply(this.MIN_MUTATION,
+                                                                this.MAX_MUTATION),
                           new Statistics(parent1.getStats(), parent2.getStats(), this.day),
-                          this.MAX_ENERGY,
-                          this.START_ENERGY);
+                          this.BREED_ENERGY);
     }
 }

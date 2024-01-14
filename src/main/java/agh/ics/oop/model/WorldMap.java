@@ -12,7 +12,6 @@ public class WorldMap{
     private Borders borders;
     private final int GRASS_ENERGY;
     private final int BREED_ENERGY;
-    private Vector2d vec = new Vector2d(5,5);
 
     private final AnimalComparator comparator = new AnimalComparator();
 

@@ -3,7 +3,6 @@ package agh.ics.oop.model;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Animal implements WorldElement {
-    private final int MAX_ENERGY;
     private final Genotype genotype;
     private final Statistics stats;
     private MapDirection orientation;
@@ -13,13 +12,11 @@ public class Animal implements WorldElement {
     public Animal(Vector2d initialPosition,
                   Genotype genotype,
                   Statistics stats,
-                  int maxEnergy,
                   int startEnergy) {
         this.orientation = MapDirection.values()[ThreadLocalRandom.current().nextInt(MapDirection.values().length)];
         this.position = initialPosition;
         this.genotype = genotype;
         this.stats = stats;
-        this.MAX_ENERGY = maxEnergy;
         this.energy = startEnergy;
     }
 
@@ -32,7 +29,7 @@ public class Animal implements WorldElement {
     }
 
     public void changeEnergy(int delta) {
-        this.energy = Math.min(this.energy+delta, MAX_ENERGY);
+        this.energy += delta;
     }
 
     public Statistics getStats() {

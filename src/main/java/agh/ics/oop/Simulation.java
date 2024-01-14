@@ -17,7 +17,7 @@ public class Simulation{
     private AnimalBuilder animalBuilder;
     private List<Animal> deadAnimals = new LinkedList<>();
 
-    public Simulation(WorldMap map, AnimalBuilder animalBuilder, MapChangeListener observer, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber){
+    public Simulation(WorldMap map, AnimalBuilder animalBuilder, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber, String SaveLogs){
         GRASS_DAILY_GROW = grassDailyGrow;
         DAILY_LOST_OF_ENERGY = dailyLostOfEnergy;
         this.animalBuilder = animalBuilder;
