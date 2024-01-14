@@ -17,4 +17,8 @@ public class GuiElement {
     public Rectangle drawGrass(int width, int height) {
         return new Rectangle(   width, height, Color.GREEN);
     }
+
+    public Rectangle drawGrassPrefferable(int width, int height) {
+        return new Rectangle(   width, height, Color.LIGHTGREEN);
+    }
 }

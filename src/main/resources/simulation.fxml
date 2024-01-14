@@ -9,22 +9,24 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Text?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" minHeight="600.0" minWidth="1100.0" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
-    <VBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" maxWidth="300" maxHeight="500">
-        <LineChart fx:id="ChartAnimalsPlants" maxWidth="300" maxHeight="300" prefHeight="300" prefWidth="300">
+    <VBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" maxWidth="300" maxHeight="600">
+        <LineChart fx:id="ChartAnimalsPlants" maxWidth="350" maxHeight="325" prefHeight="300" prefWidth="300">
             <xAxis>
                 <NumberAxis side="BOTTOM" label="Day"/>
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT" label="Number of animals/plants"/>
+                <NumberAxis side="LEFT" label="Number of animals/grasses"/>
             </yAxis>
         </LineChart>
-        <LineChart fx:id="ChartEnergyLife" maxWidth="300" maxHeight="300">
+        <LineChart fx:id="ChartEnergyLife" maxWidth="350" maxHeight="325">
             <xAxis>
                 <NumberAxis side="BOTTOM" label="Day"/>
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT" label="AVG energy to AVG age"/>
+                <NumberAxis side="LEFT" label="Avg energy/Avg lifespan"/>
             </yAxis>
         </LineChart>
     </VBox>
@@ -75,5 +77,6 @@
 
     <Button text="Pause/Resume" GridPane.columnIndex="0" GridPane.rowIndex="10" onAction="#onClickPausePlay"/>
     <Button text="Start" GridPane.columnIndex="2" GridPane.rowIndex="10" onAction="#onClickStart"/>
+    <Button text="Show/hide preffered" GridPane.columnIndex="3" GridPane.rowIndex="10" onAction="#onClickShow"/>
     </VBox>
 </HBox>

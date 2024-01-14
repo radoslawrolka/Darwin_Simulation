@@ -23,6 +23,13 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private LineChart<Number, Number> ChartEnergyLife;
 
+    private final XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> series3 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> series4 = new XYChart.Series<>();
+
+    private boolean preferred = false;
+
     @FXML
     private Label dayLabel;
     @FXML
@@ -80,20 +87,16 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void initialize() {
-
-        // Populate LineChart 1 with sample data
-        XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
-        series1.getData().add(new XYChart.Data<>(1, 10));
-        series1.getData().add(new XYChart.Data<>(2, 20));
-        series1.getData().add(new XYChart.Data<>(3, 15));
-        ChartAnimalsPlants.getData().add(series1);
-
-        // Populate LineChart 2 with sample data
-        XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
-        series2.getData().add(new XYChart.Data<>(1, 30));
-        series2.getData().add(new XYChart.Data<>(2, 15));
-        series2.getData().add(new XYChart.Data<>(3, 25));
-        ChartEnergyLife.getData().add(series2);
+        series1.setName("Animals");
+        series2.setName("Grass");
+        series3.setName("Avg Animal Energy");
+        series4.setName("Avg Animal Lifespan");
+        ChartAnimalsPlants.getData().addAll(series1,series2);
+        ChartEnergyLife.getData().addAll(series3,series4);
+        series1.getNode().setStyle("-fx-stroke: orange;");
+        series2.getNode().setStyle("-fx-stroke: green;");
+        series3.getNode().setStyle("-fx-stroke: orange;");
+        series4.getNode().setStyle("-fx-stroke: green;");
     }
 
     public void setDataFromMenu(WorldMap map, Simulation simulation, String logName) {
@@ -145,6 +148,11 @@ public class SimulationPresenter implements MapChangeListener {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d pos = new Vector2d(i,j);
+                if (preferred) {
+                    if (map.getPrefferredPositions().contains(pos)) {
+                        mapGrid.add(guiElement.drawGrassPrefferable(width, height), i - xMin + 1, yMax - j + 1);
+                    }
+                }
                 if(map.getGrassOnPosition(pos) != null) {
                     mapGrid.add(guiElement.drawGrass(width, height), i - xMin + 1, yMax - j + 1);
                 }
@@ -173,6 +181,10 @@ public class SimulationPresenter implements MapChangeListener {
         averageDescendantsCountLabel.setText(Integer.toString(simulation.getAverageDescendantNumber()));
         freeSpaceLabel.setText(Integer.toString(simulation.getAvailableSpace()));
         occupiedSpaceLabel.setText(Integer.toString(mapHeight*mapWidth - simulation.getAvailableSpace()));
+        series1.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAnimalsNumber()));
+        series2.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getGrassNumber()));
+        series3.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAnimalsAverageEnergy()));
+        series4.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAverageLifeLength()));
     }
 
     private void followAnimal() {
@@ -245,6 +257,15 @@ public class SimulationPresenter implements MapChangeListener {
             } else {
                 simulation.pauseSimulation();
             }
+        }
+    }
+
+    @FXML
+    private void onClickShow() {
+        if (preferred) {
+            preferred = false;
+        } else {
+            preferred = true;
         }
     }
 }
