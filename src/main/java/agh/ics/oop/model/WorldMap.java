@@ -95,8 +95,9 @@ public class WorldMap{
                 Animal child = animalBuilder.build(animal1, animal2);
                 placeAnimal(child);
                 children.add(child);
-                animal1.changeEnergy(-BREED_ENERGY);
-                animal2.changeEnergy(-BREED_ENERGY);
+                int breed_energy1 = BREED_ENERGY/2;
+                animal2.changeEnergy(-breed_energy1);
+                animal1.changeEnergy(-(BREED_ENERGY - breed_energy1));
             }
         }
         return children;

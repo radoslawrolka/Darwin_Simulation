@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AnimalComparatorTest {
     Vector2d v = new Vector2d(1, 1);
     Genotype g = new Genotype(5);
-    Animal a1 = new Animal(v, g, new Statistics(0), 100, 90);
-    Animal a2 = new Animal(v, g, new Statistics(7), 100, 90);
-    Animal a3 = new Animal(v, g, new Statistics(100), 100, 100);
-    Animal a4 = new Animal(v, g, new Statistics(50), 100, 40);
+    Animal a1 = new Animal(v, g, new Statistics(0), 90);
+    Animal a2 = new Animal(v, g, new Statistics(7), 90);
+    Animal a3 = new Animal(v, g, new Statistics(100), 100);
+    Animal a4 = new Animal(v, g, new Statistics(50), 40);
 
     @Test
     public void testCompare() {

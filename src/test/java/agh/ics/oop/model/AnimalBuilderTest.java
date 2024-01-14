@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AnimalBuilderTest {
     private final int genotypeLength = 32;
-    private final int MAX_ENERGY = 100;
     private final int START_ENERGY = 50;
+    private final int BREED_ENERGY = 30;
+    private final int MIN_MUTATIONS = 1;
+    private final int MAX_MUTATIONS = 5;
     private final int day = 0;
-    private final GenotypeEnum genotype = GenotypeEnum.NORMAL;
-    private final AnimalBuilder animalBuilder = new AnimalBuilder(this.genotypeLength, this.genotype, this.MAX_ENERGY, this.START_ENERGY);
+    private final GenotypeEnum genotype = GenotypeEnum.Normal;
+    private final AnimalBuilder animalBuilder = new AnimalBuilder(this.genotypeLength, this.genotype, this.BREED_ENERGY, this.START_ENERGY, this.MIN_MUTATIONS, this.MAX_MUTATIONS);
 
     @Test
     public void testSpawn() {
@@ -29,7 +31,7 @@ public class AnimalBuilderTest {
         Animal animal = this.animalBuilder.build(parent1, parent2);
         assertEquals(initialPosition, animal.getPosition());
         assertEquals(this.genotypeLength, animal.getGenotype().getGenes().length);
-        assertEquals(this.START_ENERGY, animal.getEnergy());
+        assertEquals(this.BREED_ENERGY, animal.getEnergy());
         assertEquals(this.day, animal.getStats().getDayOfBirth());
     }
 
