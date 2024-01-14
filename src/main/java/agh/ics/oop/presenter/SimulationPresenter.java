@@ -47,6 +47,7 @@ public class SimulationPresenter implements MapChangeListener {
     public void setDataFromMenu(WorldMap map, Simulation simulation){
         this.map = map;
         this.simulation = simulation;
+        simulation.setObserver(this);
         simulationThread = new Thread(simulation);
     }
 
@@ -58,8 +59,8 @@ public class SimulationPresenter implements MapChangeListener {
     private  int mapWidth;
     private  int mapHeight;
 
-    private final int width = 50;
-    private final int height = 50;
+    private int width = 50;
+    private int height = 50;
     private Thread simulationThread;
     private boolean isPaused = false;
     private boolean isRunning = false;
@@ -80,6 +81,8 @@ public class SimulationPresenter implements MapChangeListener {
         yMax = map.getCurrentBounds().upperRight().getY();
         mapWidth = xMax - xMin + 1;
         mapHeight = yMax - yMin + 1;
+        width = 500/mapWidth;
+        height = 500/mapHeight;
     }
 
     public void columnsFunction(){
@@ -145,9 +148,10 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void onClickStart() {
-        simulation.setObserver(this);
-        isRunning = true;
-        simulationThread.start();
+        if (!isRunning) {
+            isRunning = true;
+            simulationThread.start();
+        }
     }
 
     public void stopSimulation() {
@@ -155,7 +159,6 @@ public class SimulationPresenter implements MapChangeListener {
         simulationThread.interrupt();
     }
 
-    // Inside your SimulationPresenter class
     @FXML
     private void onClickPausePlay() {
         if (isRunning) {

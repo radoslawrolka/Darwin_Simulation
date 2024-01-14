@@ -32,10 +32,8 @@ public class Simulation implements Runnable {
             Vector2d position = new Vector2d(x,y);
             Animal animal = animalBuilder.spawn(position);
             animals.add(animal);
-            System.out.println("Animal " + k + " position: " + position);
             map.placeAnimal(animal);
         }
-
     }
 
     public void run(){
@@ -88,6 +86,7 @@ public class Simulation implements Runnable {
 
     public void setObserver(MapChangeListener observer){
         this.observer = observer;
+        observer.mapChanged(map,"message");
     }
 
     public void dailyTask(){
