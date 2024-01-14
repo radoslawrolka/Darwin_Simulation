@@ -43,7 +43,6 @@ public class Jungle extends AbstractGrassPlanter {
                 }
             }
         }
-        System.out.println(preferable.containsKey(new Vector2d(1,2)));
         if (isPreferable == 0) {
             not_preferable.add(eatenPosition);
         }

@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Animal implements WorldElement {
@@ -64,6 +65,18 @@ public class Animal implements WorldElement {
             this.orientation = this.orientation.next(4);
         }
         this.orientation = this.orientation.next(this.genotype.getMove());
-        // this.energy -= this.moveEnergy;
+    }
+
+    public AnimalData getAnimalData() {
+        return new AnimalData(
+                this.stats.getDayOfBirth(),
+                this.stats.getDayOfDeath(),
+                this.stats.getChildren(),
+                this.stats.getDescendants(),
+                this.stats.getPlantsEaten(),
+                Arrays.toString(this.genotype.getGenes()),
+                this.genotype.current_gene,
+                this.energy
+        );
     }
 }

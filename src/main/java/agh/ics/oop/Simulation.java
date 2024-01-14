@@ -15,6 +15,7 @@ public class Simulation implements Runnable {
     private boolean breakSimulation = false;
     private final Object pauseLock = new Object();
     private boolean isPaused = false;
+    private int day = 0;
 
     private List<Animal> animals = new ArrayList<>();
     private AnimalBuilder animalBuilder;
@@ -55,14 +56,10 @@ public class Simulation implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            try {
-                Thread.sleep(MOVE_DELAY);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             dailyTask();
             observer.mapChanged(map,"message");
         }
+        observer.mapChanged(map,"end");
     }
 
     public void pauseSimulation() {
@@ -91,13 +88,17 @@ public class Simulation implements Runnable {
 
     public void dailyTask(){
         animalBuilder.incrementDay();
+        day++;
         removeDead();
-        System.out.println("Animals number: " + animals.size());
         moveAnimals();
         map.eatGrasses();
         breedAnimals();
         map.plantGrass(GRASS_DAILY_GROW);
         dailyEnergyLost();
+    }
+
+    public int getDay(){
+        return day;
     }
 
     public void dailyEnergyLost(){
@@ -109,6 +110,7 @@ public class Simulation implements Runnable {
     public void removeDead(){
         for (int i=0; i<animals.size(); i++){
             if (animals.get(i).getEnergy() <= 0){
+                animals.get(i).getStats().setDayOfDeath(day);
                 map.removeAnimal(animals.get(i));
                 deadAnimals.add(animals.get(i));
                 animals.remove(i);
@@ -147,8 +149,17 @@ public class Simulation implements Runnable {
         return sum/animals.size();
     }
 
+    public int maxEnergy(){
+        int max = 0;
+        for (Animal animal : animals){
+            if (animal.getEnergy() > max) max = animal.getEnergy();
+        }
+        return max;
+    }
+
     public int getAverageLifeLength(){
         int sum = 0;
+        if (deadAnimals.isEmpty()) return 0;
         for (Animal animal : deadAnimals){
             sum += animal.getStats().getDayOfDeath() - animal.getStats().getDayOfBirth();
         }
@@ -162,6 +173,17 @@ public class Simulation implements Runnable {
         }
         for (Animal animal : animals){
             sum += animal.getStats().getChildren();
+        }
+        return sum/(deadAnimals.size()+animals.size());
+    }
+
+    public int getAverageDescendantNumber(){
+        int sum = 0;
+        for (Animal animal : deadAnimals){
+            sum += animal.getStats().getDescendants();
+        }
+        for (Animal animal : animals){
+            sum += animal.getStats().getDescendants();
         }
         return sum/(deadAnimals.size()+animals.size());
     }

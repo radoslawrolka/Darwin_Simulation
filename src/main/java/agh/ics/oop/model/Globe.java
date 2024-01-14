@@ -1,10 +1,7 @@
 package agh.ics.oop.model;
 
-import java.util.Vector;
-
 public class Globe implements Borders<Vector2d>{
-
-    private Vector2d mapSize;
+    private final Vector2d mapSize;
 
 
     public Globe(Vector2d mapSize){
@@ -14,18 +11,18 @@ public class Globe implements Borders<Vector2d>{
     @Override
     public Vector2d getPosition(Vector2d position, Vector2d move) {
         Vector2d newPosition = position.add(move);
-        if (newPosition.follows(new Vector2d(0,0)) && newPosition.precedes(mapSize.subtract(new Vector2d(1,1)))){
+        if (newPosition.follows(new Vector2d(1,1)) && newPosition.precedes(mapSize)){
             return newPosition;
         }
 
-        else if (newPosition.getY() < 0 || newPosition.getY() > mapSize.getY()-1){
+        else if (newPosition.getY() <= 0 || newPosition.getY() > mapSize.getY()){
             return position;
         }
         else if (newPosition.getX() > mapSize.getX()){
-            return new Vector2d(0, newPosition.getY());
+            return new Vector2d(1, newPosition.getY());
         }
         else{
-            return new Vector2d(mapSize.getX()-1, newPosition.getY());
+            return new Vector2d(mapSize.getX(), newPosition.getY());
         }
     }
 }

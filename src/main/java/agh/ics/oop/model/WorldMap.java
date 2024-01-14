@@ -70,7 +70,6 @@ public class WorldMap{
 
     public void eatGrasses(){ // Dla wszystkich pozycji zwierząt znajdujących się na mapie najsilniejsze zwierze je trawe
         for(Vector2d position : animals.keySet()){
-            System.out.println(position);
             Grass grass = this.getGrassOnPosition(position);
             if (grass != null){
                 Animal animalToEat = animals.get(position).first();
@@ -94,6 +93,8 @@ public class WorldMap{
                 Animal child = animalBuilder.build(animal1, animal2);
                 placeAnimal(child);
                 children.add(child);
+                animal1.changeEnergy(-BREED_ENERGY);
+                animal2.changeEnergy(-BREED_ENERGY);
             }
         }
         return children;

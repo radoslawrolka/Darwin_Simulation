@@ -53,10 +53,8 @@ public class JungleTest {
          assertTrue(jungle.preferable.get((new Vector2d(2,1))) == 2);
          jungle.eatGrass(new Vector2d(1,2));
          assertTrue(jungle.preferable.get((new Vector2d(1,2))) == 1);
-         System.out.println(jungle.preferable.get((new Vector2d(2,2))));
          assertFalse(jungle.preferable.containsKey(new Vector2d(2,2)));
          jungle.eatGrass(new Vector2d(2,2));
-         System.out.println(jungle.preferable.size());
          assertFalse(jungle.preferable.containsKey(new Vector2d(2,2)));
          assertTrue(jungle.preferable.size() == 0);
      }
