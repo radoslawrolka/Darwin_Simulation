@@ -1,8 +1,12 @@
 package agh.ics.oop.model;
 
+import javafx.scene.control.ChoiceBox;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class ConfigLoader {
 
@@ -35,5 +39,44 @@ public class ConfigLoader {
                 throw new IOException("CSV file is empty.");
             }
         }
+    }
+
+    public void loadConfigList(ChoiceBox<String> loadConfigList) {
+        loadConfigList.getItems().clear();
+        File configDirectory = Paths.get("src", "main", "resources", "config").toFile();
+        if (configDirectory.exists() && configDirectory.isDirectory()) {
+            File[] files = configDirectory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String fileNameWithoutExtension = removeFileExtension(file.getName());
+                    loadConfigList.getItems().add(fileNameWithoutExtension);
+                }
+            }
+        }
+    }
+
+    public boolean loadLogList (String fileName) {
+        File configDirectory = Paths.get("src", "main", "resources", "log").toFile();
+        if (configDirectory.exists() && configDirectory.isDirectory()) {
+            File[] files = configDirectory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String fileNameWithoutExtension = removeFileExtension(file.getName());
+                    if (fileNameWithoutExtension.equals(fileName)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private String removeFileExtension (String fileName) {
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            return fileName.substring(0, lastDotIndex);
+        }
+        return fileName;
     }
 }

@@ -3,7 +3,7 @@ package agh.ics.oop.model;
 public class WorldMapBuilder {
     public WorldMapBuilder(){}
 
-    public WorldMap build(int width, int height, int initialPlantCount, int energyPerPlant, int dailyPlantGrowth,
+    public WorldMap build(int width, int height, int initialPlantCount, int energyPerPlant,
      GrassPlanterEnum plantGrowthVariant,
      int energyForMating) {
         WorldMap map = new WorldMap(new Vector2d(width, height), energyPerPlant, energyForMating);

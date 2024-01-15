@@ -6,10 +6,9 @@ import java.util.*;
 
 public class WorldMap{
     private final Map<Vector2d, TreeSet<Animal>> animals = new HashMap<>();
-    private final List<MapChangeListener> observers = new ArrayList<>();
     private final Vector2d mapSize;
     private GrassPlanter field;
-    private Borders borders;
+    private Borders<Vector2d> borders;
     private final int GRASS_ENERGY;
     private final int BREED_ENERGY;
 
@@ -27,7 +26,7 @@ public class WorldMap{
         field.plantGrass(grassNumber);
     }
 
-    protected void addBorders(Borders borders){ // Dodaje granice
+    protected void addBorders(Borders<Vector2d> borders){ // Dodaje granice
         this.borders = borders;
     }
 
@@ -46,7 +45,6 @@ public class WorldMap{
     public void moveAnimal(Animal animal) { // Przesuwa zwierze na mapie
         Vector2d oldPosition = animal.getPosition();
         animal.move(borders);
-        Vector2d newPosition = animal.getPosition();
         if (getAnimalsOnPosition(oldPosition).size() == 1) {
             animals.remove(oldPosition);
         } else {
@@ -130,20 +128,6 @@ public class WorldMap{
     public String toString() {
         Boundary bounds = getCurrentBounds();
         return new MapVisualizer(this).draw(bounds.lowerLeft(), bounds.upperRight());
-    }
-
-    public void addObserver(MapChangeListener observer) {
-        observers.add(observer);
-    }
-
-    public void removeObserver(MapChangeListener observer) {
-        observers.remove(observer);
-    }
-
-    public void notifyObservers(String message) {
-        for (MapChangeListener observer : observers){
-            observer.mapChanged(this, message);
-        }
     }
 
     public String getId() {

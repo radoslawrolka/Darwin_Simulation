@@ -6,20 +6,20 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Simulation implements Runnable {
-
     private final WorldMap map;
+    private final int MOVE_DELAY;
     private final int GRASS_DAILY_GROW;
     private final int DAILY_LOST_OF_ENERGY;
-    private final int MOVE_DELAY;
+    private final Object pauseLock = new Object();
+
     private MapChangeListener observer;
     private boolean breakSimulation = false;
-    private final Object pauseLock = new Object();
     private boolean isPaused = false;
     private int day = 0;
 
-    private List<Animal> animals = new ArrayList<>();
-    private AnimalBuilder animalBuilder;
-    private List<Animal> deadAnimals = new LinkedList<>();
+    private final List<Animal> animals = new ArrayList<>();
+    private final List<Animal> deadAnimals = new LinkedList<>();
+    private final AnimalBuilder animalBuilder;
 
     public Simulation(WorldMap map, AnimalBuilder animalBuilder, int grassDailyGrow, int dailyLostOfEnergy, int startAnimalsNumber, int moveDelay){
         GRASS_DAILY_GROW = grassDailyGrow;
@@ -27,7 +27,11 @@ public class Simulation implements Runnable {
         MOVE_DELAY = moveDelay;
         this.animalBuilder = animalBuilder;
         this.map = map;
-        for(int k=0; k<startAnimalsNumber; k++){ //
+        spawnAnimals(startAnimalsNumber);
+    }
+
+    private void spawnAnimals(int startAnimalsNumber) {
+        for(int k=0; k<startAnimalsNumber; k++){
             int x = ThreadLocalRandom.current().nextInt(0, map.getMapSize().getX());
             int y = ThreadLocalRandom.current().nextInt(0, map.getMapSize().getY());
             Vector2d position = new Vector2d(x,y);
@@ -38,7 +42,7 @@ public class Simulation implements Runnable {
     }
 
     public void run(){
-        while (!animals.isEmpty()){
+        while (!animals.isEmpty()) {
             if (breakSimulation) break;
             synchronized (pauseLock) {
                 while (isPaused) {
@@ -57,9 +61,9 @@ public class Simulation implements Runnable {
                 e.printStackTrace();
             }
             dailyTask();
-            observer.mapChanged(map,"message");
+            observer.mapChanged(map);
         }
-        observer.mapChanged(map,"end");
+        observer.mapChanged(map);
     }
 
     public void pauseSimulation() {
@@ -83,7 +87,7 @@ public class Simulation implements Runnable {
 
     public void setObserver(MapChangeListener observer){
         this.observer = observer;
-        observer.mapChanged(map,"message");
+        observer.mapChanged(map);
     }
 
     public void dailyTask(){
@@ -102,8 +106,8 @@ public class Simulation implements Runnable {
     }
 
     public void dailyEnergyLost(){
-        for(int i=0; i<animals.size(); i++){
-            animals.get(i).changeEnergy(-DAILY_LOST_OF_ENERGY);
+        for (Animal animal : animals) {
+            animal.changeEnergy(-DAILY_LOST_OF_ENERGY);
         }
     }
 
@@ -187,9 +191,5 @@ public class Simulation implements Runnable {
             sum += animal.getStats().getDescendants();
         }
         return sum/(deadAnimals.size()+animals.size());
-    }
-
-    public List<Vector2d> getPrefferablePositions(){ // Preferowane pozycje traw do statystyk
-        return map.getPrefferredPositions();
     }
 }

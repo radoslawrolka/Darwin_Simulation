@@ -9,12 +9,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class EquatorTest {
-
-    private int lowerY= 3;
-    private int upperY = 6;
-
-    private Vector2d mapSize = new Vector2d(10,10);
-
+    private final Vector2d mapSize = new Vector2d(10,10);
 
     @Test
     public void startPreferableTest(){
@@ -63,6 +58,6 @@ public class EquatorTest {
         assertTrue(equator.not_preferable.contains(new Vector2d(1,1)));
         equator.eatGrass(new Vector2d(5,5));
         assertTrue(equator.preferable.containsKey(new Vector2d(5,5)));
-        assertTrue(equator.preferable.get(new Vector2d(5,5)) == 0);
+        assertEquals(0, (int) equator.preferable.get(new Vector2d(5, 5)));
     }
 }

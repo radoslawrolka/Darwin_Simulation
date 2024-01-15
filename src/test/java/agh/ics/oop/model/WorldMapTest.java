@@ -1,18 +1,14 @@
 package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-import java.util.TreeSet;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorldMapTest {
-
     @Test
     public void animalPlaceTest(){
-        WorldMap map_eq = new WorldMapBuilder().build(10, 10, 10,1,4, GrassPlanterEnum.Equator,1);
-        WorldMap map_jg = new WorldMapBuilder().build(10, 10, 10, 1,4, GrassPlanterEnum.Jungle,1);
+        WorldMap map_eq = new WorldMapBuilder().build(10, 10, 10,1, GrassPlanterEnum.Equator,1);
+        WorldMap map_jg = new WorldMapBuilder().build(10, 10, 10, 1,GrassPlanterEnum.Jungle,1);
         Animal animal = new Animal(new Vector2d(1,1), new Genotype(32), new Statistics(0), 10);
         map_eq.placeAnimal(animal);
         map_jg.placeAnimal(animal);
@@ -34,42 +30,42 @@ public class WorldMapTest {
 
     @Test
     public void moveAnimalTest(){
-        WorldMap map_eq = new WorldMapBuilder().build(10, 10, 10,1,4, GrassPlanterEnum.Equator,1);
+        WorldMap map_eq = new WorldMapBuilder().build(10, 10, 10,1, GrassPlanterEnum.Equator,1);
         Animal animal = new Animal(new Vector2d(5,5), new Genotype(32), new Statistics(0), 10);
         map_eq.placeAnimal(animal);
         MapDirection orientation = animal.getOrientation();
         map_eq.moveAnimal(animal);
         assertEquals(animal.getPosition(), new Vector2d(5,5).add(orientation.toUnitVector()));
         assertTrue(map_eq.getAnimalsOnPosition(new Vector2d(5,5).add(orientation.toUnitVector())).contains(animal));
-        assertTrue(map_eq.getAnimalsOnPosition(new Vector2d(5,5).add(orientation.toUnitVector())).size() == 1);
-        assertTrue(map_eq.getAnimalsOnPosition(new Vector2d(5,5)) == null);
+        assertEquals(1, map_eq.getAnimalsOnPosition(new Vector2d(5, 5).add(orientation.toUnitVector())).size());
+        assertNull(map_eq.getAnimalsOnPosition(new Vector2d(5, 5)));
         Animal animal2 = new Animal(animal.getPosition(), new Genotype(32), new Statistics(0), 20);
         map_eq.placeAnimal(animal2);
         Vector2d position = animal.getPosition();
-        assertTrue(map_eq.getAnimalsOnPosition(position).size() == 2);
+        assertEquals(2, map_eq.getAnimalsOnPosition(position).size());
         map_eq.moveAnimal(animal2);
         map_eq.moveAnimal(animal);
-        assertTrue(map_eq.getAnimalsOnPosition(position) == null);
+        assertNull(map_eq.getAnimalsOnPosition(position));
     }
 
     @Test
     public void removeAnimalTest(){
-        WorldMap map_eq = new WorldMapBuilder().build(10, 10, 10,1,4, GrassPlanterEnum.Equator,1);
+        WorldMap map_eq = new WorldMapBuilder().build(10, 10, 10,1,GrassPlanterEnum.Equator,1);
         Animal animal = new Animal(new Vector2d(5,5), new Genotype(32), new Statistics(0), 10);
         map_eq.placeAnimal(animal);
         map_eq.removeAnimal(animal);
-        assertTrue(map_eq.getAnimalsOnPosition(new Vector2d(5,5)) == null);
+        assertNull(map_eq.getAnimalsOnPosition(new Vector2d(5, 5)));
         Animal animal2 = new Animal(new Vector2d(5,5), new Genotype(32), new Statistics(0), 20);
         map_eq.placeAnimal(animal);
         map_eq.placeAnimal(animal2);
         map_eq.removeAnimal(animal);
-        assertTrue(map_eq.getAnimalsOnPosition(new Vector2d(5,5)).size() == 1);
-        assertTrue(map_eq.getAnimalsOnPosition(new Vector2d(5,5)).first() == animal2);
+        assertEquals(1, map_eq.getAnimalsOnPosition(new Vector2d(5, 5)).size());
+        assertSame(map_eq.getAnimalsOnPosition(new Vector2d(5, 5)).first(), animal2);
     }
 
     @Test
     public void eatGrassesTest(){
-        WorldMap map = new WorldMapBuilder().build(4, 4, 10,10,4, GrassPlanterEnum.Equator,1);
+        WorldMap map = new WorldMapBuilder().build(4, 4, 10,10,GrassPlanterEnum.Equator,1);
         Animal animal = new Animal(new Vector2d(2,2), new Genotype(32), new Statistics(0), 10);
         map.plantGrass(20);
         map.placeAnimal(animal);
@@ -77,43 +73,44 @@ public class WorldMapTest {
         map.placeAnimal(animal2);
         Vector2d position1 = animal.getPosition();
         Vector2d position2 = animal2.getPosition();
-        assertTrue(map.getGrassOnPosition(position1) != null);
-        assertTrue(map.getGrassOnPosition(position2) != null);
+        assertNotNull(map.getGrassOnPosition(position1));
+        assertNotNull(map.getGrassOnPosition(position2));
         map.eatGrasses();
         assertEquals(animal.getEnergy(), 10);
-        assertTrue(animal2.getEnergy() == 30);
+        assertEquals(30, animal2.getEnergy());
         position1 = animal.getPosition();
         position2 = animal2.getPosition();
-        assertTrue(map.getGrassOnPosition(position1) == null);
-        assertTrue(map.getGrassOnPosition(position2) == null);
+        assertNull(map.getGrassOnPosition(position1));
+
+        assertNull(map.getGrassOnPosition(position2));
         map.moveAnimal(animal);
         map.eatGrasses();
         assertEquals(animal.getEnergy(), 20);
-        assertTrue(animal2.getEnergy() == 30);
+        assertEquals(30, animal2.getEnergy());
 
     }
 
     @Test
     public void breedAnimalsTest(){
-        WorldMap map = new WorldMapBuilder().build(4, 4, 10,10,4, GrassPlanterEnum.Equator,9);
+        WorldMap map = new WorldMapBuilder().build(4, 4, 10,10,GrassPlanterEnum.Equator,9);
         Animal animal1 = new Animal(new Vector2d(2,2), new Genotype(32), new Statistics(0), 10);
         Animal animal2 = new Animal(new Vector2d(2,2), new Genotype(32), new Statistics(0), 20);
         map.placeAnimal(animal1);
         map.placeAnimal(animal2);
         List<Animal> children = map.breedAnimals(new AnimalBuilder(32, GenotypeEnum.Normal, 9, 10,1,5));
-        assertTrue(children.size() == 1);
+        assertEquals(1, children.size());
         Animal child = children.get(0);
-        assertTrue(child.getPosition().equals(new Vector2d(2,2)));
-        assertTrue(child.getEnergy() == 9);
+        assertEquals(child.getPosition(), new Vector2d(2, 2));
+        assertEquals(9, child.getEnergy());
         assertEquals(animal1.getEnergy(), 6);
-        assertTrue(animal2.getEnergy() == 15);
+        assertEquals(15, animal2.getEnergy());
         children = map.breedAnimals(new AnimalBuilder(32, GenotypeEnum.Normal, 11, 10,1,5));
-        assertTrue(children.size() == 0);
+        assertEquals(0, children.size());
     }
 
     @Test
     public void getAvailableSpaceTest(){
-        WorldMap map = new WorldMapBuilder().build(4, 4, 10,1,4, GrassPlanterEnum.Equator,1);
+        WorldMap map = new WorldMapBuilder().build(4, 4, 10,1,GrassPlanterEnum.Equator,1);
         Animal animal = new Animal(new Vector2d(2,2), new Genotype(32), new Statistics(0), 10);
         map.placeAnimal(animal);
         assertEquals(map.getAvailableSpace(), 15);

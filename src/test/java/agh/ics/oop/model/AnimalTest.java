@@ -70,12 +70,7 @@ public class AnimalTest {
 
     @Test
     public void testMove() {
-        animal1.move(new Borders<Vector2d>() {
-                        @Override
-                        public Vector2d getPosition(Vector2d position, Vector2d move) {
-                            return new Vector2d(9, 9);
-                        }
-                    });
+        animal1.move((position, move) -> new Vector2d(9, 9));
         assert animal1.getPosition().equals(new Vector2d(9, 9));
     }
 }

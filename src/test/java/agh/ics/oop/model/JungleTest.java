@@ -10,25 +10,25 @@ public class JungleTest {
          Jungle jungle = new Jungle(new Vector2d(10,10));
          jungle.addPreferable(new Vector2d(2,2));
          assertTrue(jungle.preferable.containsKey(new Vector2d(1,1)));
-         assertTrue(jungle.preferable.get((new Vector2d(1,1))) == 1);
+         assertEquals(1, (int) jungle.preferable.get((new Vector2d(1, 1))));
          assertTrue(jungle.preferable.containsKey(new Vector2d(1,2)));
          assertTrue(jungle.preferable.containsKey(new Vector2d(1,3)));
          assertTrue(jungle.preferable.containsKey(new Vector2d(2,3)));
-         assertTrue(jungle.preferable.get((new Vector2d(2,3))) == 1);
+         assertEquals(1, (int) jungle.preferable.get((new Vector2d(2, 3))));
          assertTrue(jungle.preferable.containsKey(new Vector2d(3,3)));
          assertTrue(jungle.preferable.containsKey(new Vector2d(3,2)));
          assertTrue(jungle.preferable.containsKey(new Vector2d(3,1)));
-         assertTrue(jungle.preferable.get((new Vector2d(3,1))) == 1);
+         assertEquals(1, (int) jungle.preferable.get((new Vector2d(3, 1))));
          assertTrue(jungle.preferable.containsKey(new Vector2d(2,1)));
          jungle.addPreferable(new Vector2d(2,3));
          assertTrue(jungle.preferable.containsKey(new Vector2d(1,4)));
          assertTrue(jungle.preferable.containsKey(new Vector2d(2,4)));
          assertTrue(jungle.preferable.containsKey(new Vector2d(3,4)));
-         assertTrue(jungle.preferable.get((new Vector2d(1,3))) == 2);
-         assertTrue(jungle.preferable.get((new Vector2d(1,2))) == 2);
-         assertTrue(jungle.preferable.get((new Vector2d(3,3))) == 2);
+         assertEquals(2, (int) jungle.preferable.get((new Vector2d(1, 3))));
+         assertEquals(2, (int) jungle.preferable.get((new Vector2d(1, 2))));
+         assertEquals(2, (int) jungle.preferable.get((new Vector2d(3, 3))));
          jungle.addPreferable(new Vector2d(2,2));
-         assertTrue(jungle.preferable.get((new Vector2d(3,2))) == 3);
+         assertEquals(3, (int) jungle.preferable.get((new Vector2d(3, 2))));
      }
 
      @Test
@@ -49,13 +49,13 @@ public class JungleTest {
          assertFalse(jungle.preferable.containsKey(new Vector2d(2,1)));
          assertTrue(jungle.preferable.containsKey(new Vector2d(2,2)));
          assertFalse(jungle.preferable.containsKey(new Vector2d(2,3)));
-         assertTrue(jungle.preferable.get((new Vector2d(2,2))) == 2);
-         assertTrue(jungle.preferable.get((new Vector2d(3,2))) == 2);
+         assertEquals(2, (int) jungle.preferable.get((new Vector2d(2, 2))));
+         assertEquals(2, (int) jungle.preferable.get((new Vector2d(3, 2))));
          jungle.eatGrass(new Vector2d(2,3));
-         assertTrue(jungle.preferable.get((new Vector2d(2,3))) == 1);
+         assertEquals(1, (int) jungle.preferable.get((new Vector2d(2, 3))));
          assertFalse(jungle.preferable.containsKey(new Vector2d(3,3)));
          jungle.eatGrass(new Vector2d(3,3));
          assertFalse(jungle.preferable.containsKey(new Vector2d(3,3)));
-         assertTrue(jungle.preferable.size() == 0);
+         assertEquals(0, jungle.preferable.size());
      }
 }
