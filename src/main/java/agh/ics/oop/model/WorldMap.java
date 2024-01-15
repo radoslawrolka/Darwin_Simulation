@@ -5,7 +5,7 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
 
 public class WorldMap{
-    private final Map<Vector2d, TreeSet<Animal>> animals = new HashMap<>();
+    public final Map<Vector2d, TreeSet<Animal>> animals = new HashMap<>();
     private final Vector2d mapSize;
     private GrassPlanter field;
     private Borders<Vector2d> borders;

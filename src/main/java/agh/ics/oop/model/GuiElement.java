@@ -5,8 +5,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class GuiElement {
-    public Circle drawAnimal(double energyratio, int width, int height) {
+    public Circle drawAnimal(double energyratio, int width, int height, boolean ifBest) {
         Color color = Color.RED;
+        if (ifBest && energyratio > 0.99) {
+            color = Color.WHITE;
+        } else
         if (energyratio > 0.75) {
             color = Color.BLUE;
         } else if (energyratio > 0.25) {

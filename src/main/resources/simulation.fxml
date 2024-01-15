@@ -77,5 +77,6 @@
     <Button text="Pause/Resume" GridPane.columnIndex="0" GridPane.rowIndex="10" onAction="#onClickPausePlay"/>
     <Button text="Start" GridPane.columnIndex="2" GridPane.rowIndex="10" onAction="#onClickStart"/>
     <Button text="Show/hide preffered" GridPane.columnIndex="3" GridPane.rowIndex="10" onAction="#onClickShow"/>
+    <Button text="Show/hide best Animal" GridPane.columnIndex="4" GridPane.rowIndex="10" onAction="#onClickBest"/>
     </VBox>
 </HBox>

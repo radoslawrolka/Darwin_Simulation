@@ -81,6 +81,7 @@ public class SimulationPresenter implements MapChangeListener {
     private CsvDataWriter csvDataWriter;
     private final GuiElement guiElement = new GuiElement();
     private Animal followedAnimal = null;
+    private boolean ifBest = false;
 
     @FXML
     private void initialize() {
@@ -154,7 +155,7 @@ public class SimulationPresenter implements MapChangeListener {
                 }
                 if(map.getAnimalsOnPosition(pos) != null) {
                     if (map.getAnimalsOnPosition(pos).size() > 0) {
-                        Circle circle = guiElement.drawAnimal((double) map.getAnimalsOnPosition(pos).first().getEnergy() /maxEnergy, width, height);
+                        Circle circle = guiElement.drawAnimal((double) map.getAnimalsOnPosition(pos).first().getEnergy() /maxEnergy, width, height, ifBest);
                         mapGrid.add(circle,i-xMin+1,yMax-j+1);
                         circle.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                             followedAnimal = map.getAnimalsOnPosition(pos).first();
@@ -260,5 +261,10 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private void onClickShow() {
         preferred = !preferred;
+    }
+
+    @FXML
+    private void onClickBest() {
+        ifBest = !ifBest;
     }
 }
