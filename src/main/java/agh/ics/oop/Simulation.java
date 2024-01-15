@@ -162,6 +162,27 @@ public class Simulation implements Runnable {
         return max;
     }
 
+    public String getBestGenotype() {
+        HashMap<Integer[], Integer> temp = new HashMap<>();
+        for (Animal animal : animals) {
+            Integer[] genotype = animal.getGenotype().getGenes();
+            if (temp.containsKey(genotype)) {
+                temp.put(genotype, temp.get(genotype) + 1);
+            } else {
+                temp.put(genotype, 1);
+            }
+        }
+        int max = 0;
+        Integer[] bestGenotype = null;
+        for (Integer[] genotype : temp.keySet()) {
+            if (temp.get(genotype) > max) {
+                max = temp.get(genotype);
+                bestGenotype = genotype;
+            }
+        }
+        return Arrays.toString(bestGenotype);
+    }
+
     public int getAverageLifeLength(){
         int sum = 0;
         if (deadAnimals.isEmpty()) return 0;

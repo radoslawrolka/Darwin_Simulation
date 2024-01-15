@@ -40,6 +40,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Label freeSpaceLabel;
     @FXML
     private Label occupiedSpaceLabel;
+    @FXML
+    private Label bestGenotypeLabel;
 
     @FXML
     private Label followedAnimalEnergyLabel;
@@ -175,6 +177,7 @@ public class SimulationPresenter implements MapChangeListener {
         averageDescendantsCountLabel.setText(Integer.toString(simulation.getAverageDescendantNumber()));
         freeSpaceLabel.setText(Integer.toString(simulation.getAvailableSpace()));
         occupiedSpaceLabel.setText(Integer.toString(mapHeight*mapWidth - simulation.getAvailableSpace()));
+        bestGenotypeLabel.setText(simulation.getBestGenotype());
         series1.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAnimalsNumber()));
         series2.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getGrassNumber()));
         series3.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAnimalsAverageEnergy()));

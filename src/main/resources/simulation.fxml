@@ -51,6 +51,8 @@
             <Label fx:id="freeSpaceLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
             <Label text="Occupied Space:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
             <Label fx:id="occupiedSpaceLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+            <Label text="Best Genotype:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+            <Label fx:id="bestGenotypeLabel" text="[]" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
         </GridPane>
         <Label text="Followed Animal Statistics" GridPane.rowIndex="2" GridPane.columnIndex="2" alignment="CENTER" style="-fx-font-weight: bold;"/>
         <GridPane alignment="CENTER" gridLinesVisible="true" GridPane.rowIndex="3" GridPane.columnIndex="2">
