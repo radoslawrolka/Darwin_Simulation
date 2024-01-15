@@ -14,7 +14,7 @@ public class AnimalComparator implements java.util.Comparator<Animal>{
         return Comparator.comparingInt(Animal::getEnergy)
                 .thenComparing(Animal::getDayOfBirth, Comparator.reverseOrder())
                 .thenComparingInt(Animal::getChildren)
-                .thenComparing(Animal::hashCode) // Dodany hashCode, żeby nie było remisów (wtedy TreeSet nie wstawiał animala dlatego nie działało)
-                .compare(a1, a2);                // W projekcie napisane jest, że jeśli jest remis mamy rozstrzygać losowo wydaje mi się, że hashcode jest odpowiednio losowy
+                .thenComparing(Animal::hashCode)
+                .compare(a1, a2);
     }
 }

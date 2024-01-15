@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
@@ -41,6 +40,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Label freeSpaceLabel;
     @FXML
     private Label occupiedSpaceLabel;
+    @FXML
+    private Label bestGenotypeLabel;
 
     @FXML
     private Label followedAnimalEnergyLabel;
@@ -59,41 +60,41 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label followedAnimalPlantsEatenLabel;
 
+    private final XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> series3 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> series4 = new XYChart.Series<>();
 
+    private boolean preferred = false;
     private Simulation simulation;
     private WorldMap map;
-    private int xMin;
-    private int yMin;
+    private int xMin = 1;
+    private int yMin = 1;
     private int xMax;
     private int yMax;
-    private  int mapWidth;
-    private  int mapHeight;
-    private CsvDataWriter csvDataWriter;
+    private int mapWidth;
+    private int mapHeight;
     private int width;
     private int height;
     private Thread simulationThread;
-    private final boolean isPaused = false;
     private boolean isRunning = false;
-    private final Object lock = new Object();
+    private CsvDataWriter csvDataWriter;
     private final GuiElement guiElement = new GuiElement();
     private Animal followedAnimal = null;
+    private boolean ifBest = false;
 
     @FXML
     private void initialize() {
-
-        // Populate LineChart 1 with sample data
-        XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
-        series1.getData().add(new XYChart.Data<>(1, 10));
-        series1.getData().add(new XYChart.Data<>(2, 20));
-        series1.getData().add(new XYChart.Data<>(3, 15));
-        ChartAnimalsPlants.getData().add(series1);
-
-        // Populate LineChart 2 with sample data
-        XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
-        series2.getData().add(new XYChart.Data<>(1, 30));
-        series2.getData().add(new XYChart.Data<>(2, 15));
-        series2.getData().add(new XYChart.Data<>(3, 25));
-        ChartEnergyLife.getData().add(series2);
+        series1.setName("Animals");
+        series2.setName("Grass");
+        series3.setName("Avg Animal Energy");
+        series4.setName("Avg Animal Lifespan");
+        ChartAnimalsPlants.getData().addAll(series1,series2);
+        ChartEnergyLife.getData().addAll(series3,series4);
+        series1.getNode().setStyle("-fx-stroke: orange;");
+        series2.getNode().setStyle("-fx-stroke: green;");
+        series3.getNode().setStyle("-fx-stroke: orange;");
+        series4.getNode().setStyle("-fx-stroke: green;");
     }
 
     public void setDataFromMenu(WorldMap map, Simulation simulation, String logName) {
@@ -109,9 +110,8 @@ public class SimulationPresenter implements MapChangeListener {
         mapHeight = yMax;
         width = 500/(mapWidth+1);
         height = 500/(mapHeight+1);
-        if (logName != null) {
-            csvDataWriter = new CsvDataWriter(logName);
-        }
+        csvDataWriter = (logName != null) ? new CsvDataWriter(logName) : null;
+
     }
 
     public void xyLabel(){
@@ -145,12 +145,17 @@ public class SimulationPresenter implements MapChangeListener {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d pos = new Vector2d(i,j);
+                if (preferred) {
+                    if (map.getPrefferredPositions().contains(pos)) {
+                        mapGrid.add(guiElement.drawGrassPrefferable(width, height), i - xMin + 1, yMax - j + 1);
+                    }
+                }
                 if(map.getGrassOnPosition(pos) != null) {
                     mapGrid.add(guiElement.drawGrass(width, height), i - xMin + 1, yMax - j + 1);
                 }
                 if(map.getAnimalsOnPosition(pos) != null) {
                     if (map.getAnimalsOnPosition(pos).size() > 0) {
-                        Circle circle = guiElement.drawAnimal((double) map.getAnimalsOnPosition(pos).first().getEnergy() /maxEnergy, width, height);
+                        Circle circle = guiElement.drawAnimal((double) map.getAnimalsOnPosition(pos).first().getEnergy() /maxEnergy, width, height, ifBest);
                         mapGrid.add(circle,i-xMin+1,yMax-j+1);
                         circle.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                             followedAnimal = map.getAnimalsOnPosition(pos).first();
@@ -173,6 +178,12 @@ public class SimulationPresenter implements MapChangeListener {
         averageDescendantsCountLabel.setText(Integer.toString(simulation.getAverageDescendantNumber()));
         freeSpaceLabel.setText(Integer.toString(simulation.getAvailableSpace()));
         occupiedSpaceLabel.setText(Integer.toString(mapHeight*mapWidth - simulation.getAvailableSpace()));
+        bestGenotypeLabel.setText(simulation.getBestGenotype());
+        series1.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAnimalsNumber()));
+        series2.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getGrassNumber()));
+        series3.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAnimalsAverageEnergy()));
+        series4.getData().add(new XYChart.Data<>(simulation.getDay(), simulation.getAverageLifeLength()));
+        saveLog();
     }
 
     private void followAnimal() {
@@ -206,7 +217,6 @@ public class SimulationPresenter implements MapChangeListener {
         addElements();
         updateStats();
         followAnimal();
-        saveLog();
         mapGrid.setGridLinesVisible(true);
     }
 
@@ -217,7 +227,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @Override
-    public void mapChanged(WorldMap map, String message) {
+    public void mapChanged(WorldMap map) {
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
@@ -246,5 +256,15 @@ public class SimulationPresenter implements MapChangeListener {
                 simulation.pauseSimulation();
             }
         }
+    }
+
+    @FXML
+    private void onClickShow() {
+        preferred = !preferred;
+    }
+
+    @FXML
+    private void onClickBest() {
+        ifBest = !ifBest;
     }
 }

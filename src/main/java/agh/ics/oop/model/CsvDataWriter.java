@@ -6,12 +6,12 @@ import java.io.IOException;
 
 public class CsvDataWriter {
     private final String CSV_FILE_PATH;
-    private final String CSV_HEADER = "Day,AnimalCount,PlantCount,AvgAnimalEnergy,AvgAnimalLifespan,AvgChildrenCount,AvgDescendantsCount,FreeSpace,OccupiedSpace";
 
     public CsvDataWriter(String filePath) {
         this.CSV_FILE_PATH = "src/main/resources/log/" + filePath + ".csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CSV_FILE_PATH))) {
             // Write the header
+            String CSV_HEADER = "Day,AnimalCount,PlantCount,AvgAnimalEnergy,AvgAnimalLifespan,AvgChildrenCount,AvgDescendantsCount,FreeSpace,OccupiedSpace";
             writer.write(CSV_HEADER);
             writer.newLine();
         } catch (IOException e) {

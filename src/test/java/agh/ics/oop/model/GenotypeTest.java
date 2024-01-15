@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,9 +27,7 @@ public class GenotypeTest {
     public void testGetMove() {
         Integer[] genes = genotype1.getGenes();
         List<Integer> result = new LinkedList<>();
-        for (var gene: genes) {
-            result.add(gene);
-        }
+        Collections.addAll(result, genes);
         List<Integer> doubled = new LinkedList<>(result);
         doubled.addAll(result);
         assertTrue(doubled.containsAll(result));

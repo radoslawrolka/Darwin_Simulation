@@ -2,12 +2,10 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SimulationTest {
-    WorldMap map = new WorldMapBuilder().build(10, 10, 10,1,4, GrassPlanterEnum.Equator,1);
+    WorldMap map = new WorldMapBuilder().build(10, 10, 10,1,GrassPlanterEnum.Equator,1);
     AnimalBuilder builder = new AnimalBuilder(32, GenotypeEnum.Normal, 100, 0,1,5);
 
     @Test

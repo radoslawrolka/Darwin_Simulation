@@ -11,12 +11,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
+
 public class MenuOptions implements Initializable{
     @FXML
     private TextField mapHeightTextField;
@@ -93,27 +91,7 @@ public class MenuOptions implements Initializable{
     }
 
     private void loadConfigList () {
-        loadConfigList.getItems().clear();
-        File configDirectory = Paths.get("src", "main", "resources", "config").toFile();
-        if (configDirectory.exists() && configDirectory.isDirectory()) {
-            File[] files = configDirectory.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    String fileNameWithoutExtension = removeFileExtension(file.getName());
-                    loadConfigList.getItems().add(fileNameWithoutExtension);
-                }
-            }
-        }
-    }
-
-
-
-    private String removeFileExtension (String fileName) {
-        int lastDotIndex = fileName.lastIndexOf('.');
-        if (lastDotIndex > 0) {
-            return fileName.substring(0, lastDotIndex);
-        }
-        return fileName;
+        configLoader.loadConfigList(loadConfigList);
     }
 
     @FXML
@@ -192,26 +170,9 @@ public class MenuOptions implements Initializable{
         alert.showAndWait();
     }
 
-    private boolean loadLogList (String fileName) {
-        File configDirectory = Paths.get("src", "main", "resources", "log").toFile();
-        if (configDirectory.exists() && configDirectory.isDirectory()) {
-            File[] files = configDirectory.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    String fileNameWithoutExtension = removeFileExtension(file.getName());
-                    if (fileNameWithoutExtension.equals(fileName)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     private boolean validateData() {
-        if (this.mapHeight <= 0 || this.mapWidth <= 0) {
-            showInvalidDataAlert("Map height and width must be positive integers.");
+        if (this.mapHeight <= 0 || this.mapWidth <= 0 || this.mapHeight > 100 || this.mapWidth > 100)  {
+            showInvalidDataAlert("Map height and width must be within [0, 100] range.");
             return false;
         }
         if (this.initialPlantCount < 0 || this.energyPerPlant < 0 || this.dailyPlantGrowth < 0) {
@@ -234,8 +195,8 @@ public class MenuOptions implements Initializable{
             showInvalidDataAlert("Please select whether to save logs.");
             return false;
         }
-        if (this.moveDelay < 0) {
-            showInvalidDataAlert("Move delay must be non-negative integer.");
+        if (this.moveDelay < 100) {
+            showInvalidDataAlert("Move delay must be at least 100ms.");
             return false;
         }
         if (this.saveLogs.equals("Yes")) {
@@ -243,7 +204,7 @@ public class MenuOptions implements Initializable{
                 showInvalidDataAlert("Please enter a name for the logs.");
                 return false;
             }
-            if (!loadLogList(this.LogsName)) {
+            if (!configLoader.loadLogList(this.LogsName)) {
                 showInvalidDataAlert("Logs with this name already exist.");
                 return false;
             }
@@ -258,7 +219,6 @@ public class MenuOptions implements Initializable{
     private void onClickLoadConfig() {
         String fileName = loadConfigList.getValue();
         if (fileName != null && !fileName.isEmpty()) {
-            ConfigLoader configLoader = new ConfigLoader();
             ConfigData configData = null;
             try {
                 configData = configLoader.loadFromCsv(fileName);
@@ -318,11 +278,10 @@ public class MenuOptions implements Initializable{
         simulationStage.close();
     }
 
-
     @FXML
     private void onClickPlay() {
         if (readData()) {
-            WorldMap map = worldMapBuilder.build(this.mapWidth, this.mapHeight, this.initialPlantCount, this.energyPerPlant, this.dailyPlantGrowth, this.plantGrowthVariant, this.energyForMating);
+            WorldMap map = worldMapBuilder.build(this.mapWidth, this.mapHeight, this.initialPlantCount, this.energyPerPlant, this.plantGrowthVariant, this.energyForMating);
             AnimalBuilder animalBuilder = new AnimalBuilder(this.genomeLength, this.animalBehaviourVariant, this.breededAnimalEnergy, this.initialAnimalEnergy, this.minMutations, this.maxMutations);
             Simulation simulation = new Simulation(map, animalBuilder, this.dailyPlantGrowth, this.energyLossPerDay, this.initialAnimalCount, this.moveDelay);
             SimulationPresenter simulationController = openSimulationWindow();

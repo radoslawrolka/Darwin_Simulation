@@ -5,11 +5,10 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
 
 public class WorldMap{
-    private final Map<Vector2d, TreeSet<Animal>> animals = new HashMap<>();
-    private final List<MapChangeListener> observers = new ArrayList<>();
+    public final Map<Vector2d, TreeSet<Animal>> animals = new HashMap<>();
     private final Vector2d mapSize;
     private GrassPlanter field;
-    private Borders borders;
+    private Borders<Vector2d> borders;
     private final int GRASS_ENERGY;
     private final int BREED_ENERGY;
 
@@ -27,7 +26,7 @@ public class WorldMap{
         field.plantGrass(grassNumber);
     }
 
-    protected void addBorders(Borders borders){ // Dodaje granice
+    protected void addBorders(Borders<Vector2d> borders){ // Dodaje granice
         this.borders = borders;
     }
 
@@ -44,14 +43,8 @@ public class WorldMap{
     }
 
     public void moveAnimal(Animal animal) { // Przesuwa zwierze na mapie
-        Vector2d oldPosition = animal.getPosition();
+        this.removeAnimal(animal);
         animal.move(borders);
-        Vector2d newPosition = animal.getPosition();
-        if (getAnimalsOnPosition(oldPosition).size() == 1) {
-            animals.remove(oldPosition);
-        } else {
-            animals.get(oldPosition).remove(animal);
-        }
         placeAnimal(animal);
     }
 
@@ -73,10 +66,11 @@ public class WorldMap{
             Grass grass = this.getGrassOnPosition(position);
             if (grass != null){
                 Animal animalToEat = animals.get(position).first();
+                animals.get(position).remove(animalToEat);
                 animalToEat.changeEnergy(GRASS_ENERGY);
                 animalToEat.getStats().addPlant();
                 field.eatGrass(position);
-
+                animals.get(position).add(animalToEat);
             }
         }
     }
@@ -90,7 +84,7 @@ public class WorldMap{
             Animal animal1 = animals.get(position).first();
             animals.get(position).remove(animal1);
             Animal animal2 = animals.get(position).first();
-            animals.get(position).add(animal1);
+            animals.get(position).remove(animal2);
             if (animal1.getEnergy() >= BREED_ENERGY && animal2.getEnergy() >= BREED_ENERGY){
                 Animal child = animalBuilder.build(animal1, animal2);
                 placeAnimal(child);
@@ -99,6 +93,8 @@ public class WorldMap{
                 animal2.changeEnergy(-breed_energy1);
                 animal1.changeEnergy(-(BREED_ENERGY - breed_energy1));
             }
+            animals.get(position).add(animal1);
+            animals.get(position).add(animal2);
         }
         return children;
     }
@@ -130,20 +126,6 @@ public class WorldMap{
     public String toString() {
         Boundary bounds = getCurrentBounds();
         return new MapVisualizer(this).draw(bounds.lowerLeft(), bounds.upperRight());
-    }
-
-    public void addObserver(MapChangeListener observer) {
-        observers.add(observer);
-    }
-
-    public void removeObserver(MapChangeListener observer) {
-        observers.remove(observer);
-    }
-
-    public void notifyObservers(String message) {
-        for (MapChangeListener observer : observers){
-            observer.mapChanged(this, message);
-        }
     }
 
     public String getId() {
