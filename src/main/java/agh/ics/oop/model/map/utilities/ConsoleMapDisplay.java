@@ -1,8 +1,6 @@
 package agh.ics.oop.model.map.utilities;
 
 import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.map.utilities.Boundary;
-import agh.ics.oop.model.map.utilities.MapChangeListener;
 import agh.ics.oop.model.util.MapVisualizer;
 
 public class ConsoleMapDisplay implements MapChangeListener {
