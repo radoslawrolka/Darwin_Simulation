@@ -43,13 +43,8 @@ public class WorldMap{
     }
 
     public void moveAnimal(Animal animal) { // Przesuwa zwierze na mapie
-        Vector2d oldPosition = animal.getPosition();
+        this.removeAnimal(animal);
         animal.move(borders);
-        if (getAnimalsOnPosition(oldPosition).size() == 1) {
-            animals.remove(oldPosition);
-        } else {
-            animals.get(oldPosition).remove(animal);
-        }
         placeAnimal(animal);
     }
 
@@ -71,10 +66,11 @@ public class WorldMap{
             Grass grass = this.getGrassOnPosition(position);
             if (grass != null){
                 Animal animalToEat = animals.get(position).first();
+                animals.get(position).remove(animalToEat);
                 animalToEat.changeEnergy(GRASS_ENERGY);
                 animalToEat.getStats().addPlant();
                 field.eatGrass(position);
-
+                animals.get(position).add(animalToEat);
             }
         }
     }
@@ -88,7 +84,7 @@ public class WorldMap{
             Animal animal1 = animals.get(position).first();
             animals.get(position).remove(animal1);
             Animal animal2 = animals.get(position).first();
-            animals.get(position).add(animal1);
+            animals.get(position).remove(animal2);
             if (animal1.getEnergy() >= BREED_ENERGY && animal2.getEnergy() >= BREED_ENERGY){
                 Animal child = animalBuilder.build(animal1, animal2);
                 placeAnimal(child);
@@ -97,6 +93,8 @@ public class WorldMap{
                 animal2.changeEnergy(-breed_energy1);
                 animal1.changeEnergy(-(BREED_ENERGY - breed_energy1));
             }
+            animals.get(position).add(animal1);
+            animals.get(position).add(animal2);
         }
         return children;
     }

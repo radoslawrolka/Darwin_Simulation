@@ -11,6 +11,8 @@ public class GuiElement {
             color = Color.BLUE;
         } else if (energyratio > 0.25) {
             color = Color.ORANGE;
+        } else if (energyratio == 0) {
+            color = Color.BLACK;
         }
         return new Circle((double) Math.min(width, height) /2, color);
     }
