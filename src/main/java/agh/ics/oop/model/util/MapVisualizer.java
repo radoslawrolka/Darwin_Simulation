@@ -1,9 +1,9 @@
 package agh.ics.oop.model.util;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.Grass;
-import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.WorldMap;
+import agh.ics.oop.model.entities.animal.Animal;
+import agh.ics.oop.model.entities.grass.Grass;
+import agh.ics.oop.model.map.utilities.Vector2d;
+import agh.ics.oop.model.map.WorldMap;
 
 /**
  * The map visualizer converts the {@link WorldMap} map into a string
